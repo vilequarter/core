@@ -1,0 +1,155 @@
+* {
+    font-family: Tahoma, Geneva, sans-serif;
+
+}
+
+#__next {
+    flex: 1 1 auto;
+}
+
+#loadingSplash {
+    background-color: #855125;
+    position: fixed;
+    z-index: 100;
+    height: 100%;
+    width: 100%;
+    font-size: 50px;
+    text-align: center;
+}
+
+.tabButtons {
+    width: 100%;
+    text-align: center;
+    position: relative;
+}
+
+.tab {
+    width: 100%;
+    height: 100%;
+    position: relative;
+}
+
+.column {
+    min-height: 100%;
+    height: 100%;
+    width: 25%;
+
+    display: inline-block;
+    margin-top: 4px;
+
+    position: relative;
+    text-align: center;
+}
+
+.game {
+    position:relative;
+    bottom: 0;
+    top: 10px;
+    width:100%;
+    min-width: 1000px;
+    margin: 0 auto;
+    height: 100%;
+}
+
+body {
+    display: flex;
+    min-height: 100vh;
+}
+
+.messageBox {
+    text-align: center;
+    overflow-y: auto;
+    word-wrap: normal;
+    border: solid 1px #855125;
+    height: 200px;
+    width: 33%;
+    position: relative;
+    bottom: 5px;
+    left: 33%;
+    border-radius: 6px;
+}
+
+button{
+    border: 2px solid #855125;
+    border-radius: 8px;
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    font-size: 11px;
+    height: auto;
+    padding: 3px;
+    margin: 1px;
+    background: white;
+}
+
+.buttonTitle{
+    font-weight: bold;
+    font-size: 13px;
+}
+
+.buttonEffect{
+    font-style: italic;
+    font-size: 12px;
+}
+
+.buttonCost{
+    color: #855125;
+}
+
+.buttonActive{
+    background-color: green;
+}
+
+.activeSwitch {
+    background-color: green;
+    font-weight: bold;
+}
+
+.inactiveSwitch {
+    background-color: white;
+}
+
+progress {
+    height: 15px;
+    background: white;
+    border-radius: 8px;
+}
+
+progress::-webkit-progress-value {
+    background: #855125;
+}
+
+progress::-moz-progress-bar {
+    background: #855125;
+}
+
+.loreMessage {
+    color: #855125;
+    font-size: 12px;
+}
+
+.errorMessage {
+    color: #ca0202;
+    font-size: 18px;
+    top: 15px;
+    margin: auto;
+    font-weight: bold;
+    text-align: center;
+}
+
+.infoMessage {
+    color: #3a3a3a;
+    font-size: 12px;
+}
+
+.display-flex {
+    display: flex
+}
+
+.display-none {
+    display: none
+}
+
+.display-inline-block {
+    display: inline-block
+}
