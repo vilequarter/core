@@ -13,7 +13,10 @@ import { addAction, removeAction } from "./player/playerFunctions.jsx"
 import { consumeVolume, consumeDiscrete } from "./resources/resourcesFunctions.jsx"
 import { addEssence, addContemplation, removeEssence, removeContemplation } from "./player/playerFunctions.jsx"
 
-export function MainPage({isActive, time}){
+export function MainPage({isActive, saveHandler, currentSave}){
+    //TODO: load currentSave on page load
+
+
     const [gameSpeed, setGameSpeed] = useState(1);
     function changeGameSpeed(value){
         setGameSpeed(value);
@@ -127,12 +130,12 @@ export function MainPage({isActive, time}){
     function updateActiveResearch(){
         
     }
-    
-    function save(){
-        
-    }
-    
 
+    function save(){
+        const newState = [...currentSave];
+        //TODO: update newState
+        saveHandler(newState);
+    }
 
     return(
         <div className={isActive ? "display-flex" : "display-none"}>
