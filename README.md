@@ -9,13 +9,13 @@ Current functionality:
 * Gain Essence!
 * Expand Influence!
 * Speed up time with Contemplation!
-⋅⋅* Contemplation gained while game not in focus
+  * Contemplation gained while game not in focus
 * Ability to do only one thing at a time!
-⋅⋅* This is intentional and will change with research
+  * This is intentional and will change with research
 
 Upcoming functionality (roughly in order of implemenation):
 * Saving!
-⋅⋅* Including import/export and hard reset
+  * Including import/export and hard reset
 * Offline gain of Contemplation!
 * Research!
 * Messages!
