@@ -13,23 +13,23 @@ import { addAction, removeAction } from "./player/playerFunctions.jsx"
 import { consumeVolume, consumeDiscrete } from "./resources/resourcesFunctions.jsx"
 import { addEssence, addContemplation, removeEssence, removeContemplation } from "./player/playerFunctions.jsx"
 
-export function MainPage({isActive, saveHandler, currentSave}){
-    //TODO: load currentSave on page load
-
+export function MainPage({isActive, saveHandler, currentSave, lastUpdate, lastUpdateHandler}){
+    const player = usePlayer();
+    const playerDispatch = usePlayerDispatch();
+    const resources = useResources();
+    const resourcesDispatch = useResourcesDispatch();
 
     const [gameSpeed, setGameSpeed] = useState(1);
     function changeGameSpeed(value){
         setGameSpeed(value);
     }
-    //default ticksPerSecond = 10, adjusted by gameSpeed
     const ticksPerSecond = 10;
     const loopDelay = 1000 / (ticksPerSecond * gameSpeed);
     const loopRef = useRef(null);
     const realTimeLoopRef = useRef(null);
-    //TODO: save lastUpdate in localStorage to allow for offline progress
-    const [lastUpdate, setLastUpdate] = useState(Date.now());
-    //10 minute auto save interval
-    const [saveInterval, setSaveInterval] = useState(600)
+    const saveRef = useRef(null);
+    const [saveInterval, setSaveInterval] = useState(Date.now())
+    const [saveReady, setSaveReady] = useState(false);
 
     useEffect(() => {
         loopRef.current = setInterval(() => {
@@ -39,7 +39,12 @@ export function MainPage({isActive, saveHandler, currentSave}){
                     setGameSpeed(1);
                 }
             }
-            setLastUpdate(Date.now());
+            if(saveReady){
+                save();
+                setSaveReady(false);
+                setSaveInterval(Date.now());
+            }
+            lastUpdateHandler(Date.now());
         }, loopDelay);
         
         return () => {
@@ -47,6 +52,7 @@ export function MainPage({isActive, saveHandler, currentSave}){
         }
     })
 
+    //offline time gain interval
     useEffect(() =>{
         realTimeLoopRef.current = setInterval(() => {
             let time = Math.floor((Date.now() - lastUpdate)/1000);
@@ -54,22 +60,24 @@ export function MainPage({isActive, saveHandler, currentSave}){
                 console.log("Adding " + time + " contemplation");
                 addContemplation(time, playerDispatch);
             }
-            if(saveInterval <= 0){
-                save();
-                setSaveInterval(600);
-            }
-            setSaveInterval(saveInterval - 1);
         }, 1000);
-
         return () => {
             clearInterval(realTimeLoopRef.current);
         }
     })
 
-    const player = usePlayer();
-    const playerDispatch = usePlayerDispatch();
-    const resources = useResources();
-    const resourcesDispatch = useResourcesDispatch();
+    //save interval
+    useEffect(() => {
+        var lastSave = saveInterval;
+        saveRef.current = setInterval(() => {
+            if((Date.now() - lastSave) / 1000 >= 300){
+                setSaveReady(true);
+            }
+        }, 1000);
+        return () => {
+            clearInterval(saveRef.current);
+        }
+    }, [saveReady])
 
     const [expanding, setExpanding] = useState(false);
     function toggleExpansion(){
@@ -102,7 +110,7 @@ export function MainPage({isActive, saveHandler, currentSave}){
             }
             else{
                 var essenceToAdd = consumeVolume(resource.id, resources, resourcesDispatch, player, playerDispatch);
-                if(!addEssence(essenceToAdd, player, playerDispatch)){ //essence is max, deactivate
+                if(!addEssence(essenceToAdd, player, playerDispatch)){
                     resourcesDispatch({
                         type: 'deactivateResource',
                         id: resource.id
@@ -132,8 +140,21 @@ export function MainPage({isActive, saveHandler, currentSave}){
     }
 
     function save(){
-        const newState = [...currentSave];
-        //TODO: update newState
+        const newState = {
+            influence: player.influence,
+            essence: player.essence,
+            contemplation: player.contemplation,
+            lastUpdate: lastUpdate,
+            consumed: [0,0,0,0,0,0,0,0,0,0],
+            discreteProgress: [0,0,0,0,0,0,0,0,0,0],
+            researchCompleted: [],
+            researchProgress: []
+        };
+        resources.forEach((r) => {
+            newState.consumed[r.id] = r.consumed;
+            if(r.type === "discrete") newState.discreteProgress[r.id] = r.progress;
+        })
+        //TODO: update research save
         saveHandler(newState);
     }
 
@@ -145,7 +166,7 @@ export function MainPage({isActive, saveHandler, currentSave}){
             <ResearchColumn />
             <MessageBox />
 
-            <Debug />
+            <Debug currentSave={currentSave}/>
         </div>
     )
 }

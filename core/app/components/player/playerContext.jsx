@@ -1,4 +1,4 @@
-import { createContext, useContext, useReducer } from 'react';
+import { createContext, useContext, useEffect, useReducer } from 'react';
 
 import { round } from '../functions';
 
@@ -6,6 +6,35 @@ export const PlayerContext = createContext(null);
 export const PlayerDispatchContext = createContext(null);
 
 export function PlayerProvider({ children }) {
+    const initialPlayer = {
+        contemplation: 0, //offline seconds
+    
+        essence: 0,
+        baseMaxEssence: 100,
+        maxEssenceMultiplier: 1,
+        maxEssenceBaseModifier: 0,
+        getMaxEssence: function(){return (this.baseMaxEssence + this.maxEssenceBaseModifier) * this.maxEssenceMultiplier},
+    
+        influenceVolume: 65.45,
+        getInfluenceRadius: function(){return round(Math.cbrt(.75 * this.influenceVolume / Math.PI))},
+        baseExpandCost: .1,
+        expandCostMultiplier: 1,
+        expandCostBaseModifier: 0,
+        getExpandCost: function(){return (this.baseExpandCost - this.expandCostBaseModifier) / this.expandCostMultiplier},
+        baseExpandRate: (1/10),
+        expandRateMultiplier: 1,
+        expandRateBaseModifier: 0,
+        getExpandRate: function(){return (this.baseExpandRate + this.expandRateBaseModifier) * this.expandRateMultiplier},
+    
+        activeActions: 0,
+        maxActions: 1,
+    
+        baseResearchRate: (1/10),
+        researchRateMultiplier: 1,
+        researchRateBaseModifier: 0,
+        getResearchRate: function(){return (this.baseResearchRate + this.researchRateBaseModifier) * this.researchRateMultiplier}
+    }
+
     const [player, dispatch] = useReducer(
         playerReducer,
         initialPlayer
@@ -128,37 +157,16 @@ function playerReducer(player, action){
                 contemplation: (player.contemplation - action.value)
             })
         }
+        case 'updateAll': {
+            return({
+                ...player,
+                contemplation: action.contemplation,
+                essence: action.essence,
+                influenceVolume: action.influence
+            })
+        }
         default: {
             throw Error("Unknown action: " + action.type);
         }
     }
-}
-
-const initialPlayer = {
-    contemplation: 0, //offline ticks(or seconds)
-
-    essence: 0,
-    baseMaxEssence: 100,
-    maxEssenceMultiplier: 1,
-    maxEssenceBaseModifier: 0,
-    getMaxEssence: function(){return (this.baseMaxEssence + this.maxEssenceBaseModifier) * this.maxEssenceMultiplier},
-
-    influenceVolume: 65.45,
-    getInfluenceRadius: function(){return round(Math.cbrt(.75 * this.influenceVolume / Math.PI))},
-    baseExpandCost: .1,
-    expandCostMultiplier: 1,
-    expandCostBaseModifier: 0,
-    getExpandCost: function(){return (this.baseExpandCost - this.expandCostBaseModifier) / this.expandCostMultiplier},
-    baseExpandRate: (1/10),
-    expandRateMultiplier: 1,
-    expandRateBaseModifier: 0,
-    getExpandRate: function(){return (this.baseExpandRate + this.expandRateBaseModifier) * this.expandRateMultiplier},
-
-    activeActions: 0,
-    maxActions: 1,
-
-    baseResearchRate: (1/10),
-    researchRateMultiplier: 1,
-    researchRateBaseModifier: 0,
-    getResearchRate: function(){return (this.baseResearchRate + this.researchRateBaseModifier) * this.researchRateMultiplier}
 }

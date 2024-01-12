@@ -48,3 +48,17 @@ export function consumeDiscrete(id, resources, resourcesDispatch, player, player
         value: progress
     })
 }
+
+export function updateAllResources(loaded, resources, resourcesDispatch){
+    const nextResources = resources.map(resource => {
+        return {
+            ...resource,
+            consumed: loaded.consumed[resource.id],
+            progress: loaded.discreteProgress[resource.id]
+        }
+    })
+    resourcesDispatch({
+        type: 'updateAll',
+        resources: nextResources
+    })
+}

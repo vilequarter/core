@@ -65,3 +65,12 @@ export function removeContemplation(value, player, dispatch){
     });
     return true;
 }
+
+export function updateAllPlayer(loaded, dispatch){
+    dispatch({
+        type: 'updateAll',
+        contemplation: loaded.contemplation,
+        essence: loaded.essence,
+        influence: loaded.influence
+    })
+}
