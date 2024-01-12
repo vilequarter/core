@@ -6,7 +6,7 @@ import { usePlayer } from "../player/playerContext"
 import { useResources } from "../resources/resourcesContext"
 
 
-export function SettingsPage({isActive, currentSave, saveHandler, deleteHandler, exportHandler, importHandler, lastUpdate}){
+export function SettingsPage({isActive, currentSave, saveHandler, deleteHandler, exportHandler, importHandler, lastUpdate, messageHandler}){
     const player = usePlayer();
     const resources = useResources();
 
@@ -27,6 +27,7 @@ export function SettingsPage({isActive, currentSave, saveHandler, deleteHandler,
         })
         //TODO: update research save
         saveHandler(newState);
+        messageHandler("Game Saved", "infoMessage");
     }
 
     return(

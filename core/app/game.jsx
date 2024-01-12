@@ -47,7 +47,10 @@ export function Game(){
         var loaded = JSON.parse(localStorage.getItem(SAVE));
         if(loaded == null) return;
         let offlineTime = Math.floor((Date.now() - loaded.lastUpdate)/1000);
-        if(offlineTime >= 1) loaded.contemplation += offlineTime;
+        if(offlineTime >= 1) {
+            loaded.contemplation += offlineTime;
+            addMessage("Gained " + offlineTime + " Contemplation", "infoMessage");
+        }
         setCurrentSave(loaded);
         updateWithLoadedData(loaded);
     }, [])
@@ -57,7 +60,6 @@ export function Game(){
         updateAllPlayer(loaded, playerDispatch);
     }
     
-
     const save = (state) => {
         setCurrentSave(state);
         localStorage.setItem(SAVE, JSON.stringify(state));
@@ -80,7 +82,8 @@ export function Game(){
         var s = prompt("Enter save string:".trim());
         var o = tryParseJSONObject(decompressFromEncodedURIComponent(s));
         if(o == false){
-            //TODO: invalid save message
+            alert("Invalid string!");
+            return;
         } else {
             save(o);
             location.reload();
@@ -98,6 +101,21 @@ export function Game(){
         return false;
     }
 
+    const [messageList, setMessageList] = useState([{text: "Welcome to Core", className: "loreMessage"}]);
+
+    const addMessage = (text, className) => {
+        var newMessageList = [...messageList];
+        newMessageList.unshift({text: text, className: className});
+        if(newMessageList.length > 15){
+            newMessageList.pop();
+        }
+        //TODO:
+        //  consider some indication of a new message, such as a brief brightening of the text when it appears
+        //      this would allow for reduction of duplicate messages, as we could check if the new message
+        //      matches the latest message and can just brighten it again as if it was new rather than adding it again
+        setMessageList(newMessageList);
+    }
+
     
     return(
         <div className="game">
@@ -113,6 +131,8 @@ export function Game(){
                 currentSave={currentSave}
                 lastUpdate={lastUpdate}
                 lastUpdateHandler={setLastUpdate}
+                messageList={messageList}
+                messageHandler={addMessage}
             />
             <SettingsPage 
                 isActive={activeIndex === 1}
@@ -122,6 +142,7 @@ export function Game(){
                 exportHandler={exportSave}
                 importHandler={importSave}
                 lastUpdate={lastUpdate}
+                messageHandler={addMessage}
             />
         </div>
     )

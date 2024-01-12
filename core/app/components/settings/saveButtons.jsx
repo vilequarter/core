@@ -20,4 +20,3 @@ export function SaveButtons({saveHandler, deleteHandler, exportHandler, importHa
         </div>
     )
 }
-

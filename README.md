@@ -15,10 +15,10 @@ Current functionality:
   * This is intentional and will change with research
 * Saving!
   * Currently 10-minute auto-save and a manual save button in the Settings tab
+* Informational Messages!
 
-Upcoming functionality (roughly in order of implemenation):
+Upcoming functionality (roughly in order of implementation):
 * Research!
-* Messages!
 * Constructs!
 * Less-ugly layout!
 * Themes!

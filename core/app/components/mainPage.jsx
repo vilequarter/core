@@ -13,7 +13,7 @@ import { addAction, removeAction } from "./player/playerFunctions.jsx"
 import { consumeVolume, consumeDiscrete } from "./resources/resourcesFunctions.jsx"
 import { addEssence, addContemplation, removeEssence, removeContemplation } from "./player/playerFunctions.jsx"
 
-export function MainPage({isActive, saveHandler, currentSave, lastUpdate, lastUpdateHandler}){
+export function MainPage({isActive, saveHandler, currentSave, lastUpdate, lastUpdateHandler, messageList, messageHandler}){
     const player = usePlayer();
     const playerDispatch = usePlayerDispatch();
     const resources = useResources();
@@ -57,7 +57,6 @@ export function MainPage({isActive, saveHandler, currentSave, lastUpdate, lastUp
         realTimeLoopRef.current = setInterval(() => {
             let time = Math.floor((Date.now() - lastUpdate)/1000);
             if(time >= 1){
-                console.log("Adding " + time + " contemplation");
                 addContemplation(time, playerDispatch);
             }
         }, 1000);
@@ -82,8 +81,14 @@ export function MainPage({isActive, saveHandler, currentSave, lastUpdate, lastUp
     const [expanding, setExpanding] = useState(false);
     function toggleExpansion(){
         if(!expanding){
-            if(player.essence < player.getExpandCost()) return;
-            if(!addAction(player, playerDispatch)) return;
+            if(player.essence < player.getExpandCost()){
+                messageHandler("Not enough essence, can't expand influence", "infoMessage");
+                return;
+            };
+            if(!addAction(player, playerDispatch)) {
+                messageHandler("Not enough available actions, cancel an activity first", "infoMessage");
+                return;
+            }
             setExpanding(true);
         } else {
             removeAction(playerDispatch);
@@ -106,16 +111,17 @@ export function MainPage({isActive, saveHandler, currentSave, lastUpdate, lastUp
                 return;
             }
             if(resource.type == "discrete"){
-                consumeDiscrete(resource.id, resources, resourcesDispatch, player, playerDispatch);
+                consumeDiscrete(resource.id, resources, resourcesDispatch, player, playerDispatch, messageHandler);
             }
             else{
-                var essenceToAdd = consumeVolume(resource.id, resources, resourcesDispatch, player, playerDispatch);
+                var essenceToAdd = consumeVolume(resource.id, resources, resourcesDispatch, player, playerDispatch, messageHandler);
                 if(!addEssence(essenceToAdd, player, playerDispatch)){
                     resourcesDispatch({
                         type: 'deactivateResource',
                         id: resource.id
                     });
                     removeAction(playerDispatch);
+                    messageHandler("Your essence is full, turned off consumption of " + resource.name, "errorMessage");
                 }
             }
         })
@@ -131,6 +137,7 @@ export function MainPage({isActive, saveHandler, currentSave, lastUpdate, lastUp
             })
         }
         else {
+            messageHandler("Not enough essence, can't expand influence", "infoMessage");
             toggleExpansion();
         }
     }
@@ -156,17 +163,18 @@ export function MainPage({isActive, saveHandler, currentSave, lastUpdate, lastUp
         })
         //TODO: update research save
         saveHandler(newState);
+        messageHandler("Game Saved", "infoMessage");
     }
 
     return(
         <div className={isActive ? "display-flex" : "display-none"}>
-            <ResourcesColumn speed = {gameSpeed} speedHandler = {changeGameSpeed}/>
+            <ResourcesColumn speed = {gameSpeed} speedHandler = {changeGameSpeed} messageHandler={messageHandler}/>
             <InfluenceColumn expanding = {expanding} expandingHandler = {toggleExpansion}/>
             <ConstructsColumn />
             <ResearchColumn />
-            <MessageBox />
+            <MessageBox messageList={messageList}/>
 
-            <Debug currentSave={currentSave}/>
+            <Debug handler={messageHandler}/>
         </div>
     )
 }

@@ -7,7 +7,7 @@ import { Button } from "../button";
 
 import { addAction, removeAction } from "../player/playerFunctions";
 
-export function ResourcesColumn({speed, speedHandler}){
+export function ResourcesColumn({speed, speedHandler, messageHandler}){
     const player = usePlayer();
     const playerDispatch = usePlayerDispatch();
     const resources = useResources();
@@ -15,8 +15,14 @@ export function ResourcesColumn({speed, speedHandler}){
 
     function toggleResource(id){
         if(!resources[id].active){
-            if(resources[id].getAvailable(player) == 0) return;
-            if(!addAction(player, playerDispatch)) return;
+            if(resources[id].getAvailable(player) == 0) {
+                messageHandler("You're out of " + resources[id].name + ", expand your influence further", "infoMessage");
+                return;
+            }
+            if(!addAction(player, playerDispatch)) {
+                messageHandler("Not enough available actions, cancel an activity first", "errorMessage");
+                return;
+            }
             resourcesDispatch({
                 type: 'activateResource',
                 id: id

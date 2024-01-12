@@ -1,7 +1,7 @@
 import { removeAction } from "../player/playerFunctions";
 import { addEssence } from "../player/playerFunctions";
 
-export function consumeVolume(id, resources, resourcesDispatch, player, playerDispatch){
+export function consumeVolume(id, resources, resourcesDispatch, player, playerDispatch, messageHandler){
     var consume = resources[id].rate;
     if(resources[id].getAvailable(player) < consume){
         consume = resources[id].getAvailable(player);
@@ -9,6 +9,7 @@ export function consumeVolume(id, resources, resourcesDispatch, player, playerDi
             type: 'deactivateResource',
             id: id
         });
+        messageHandler("You've run out of " + resources[id].name, "infoMessage")
         removeAction(playerDispatch);
     }
     var essence = resources[id].value * consume;
@@ -20,12 +21,12 @@ export function consumeVolume(id, resources, resourcesDispatch, player, playerDi
     return(essence);
 }
 
-export function consumeDiscrete(id, resources, resourcesDispatch, player, playerDispatch){
+export function consumeDiscrete(id, resources, resourcesDispatch, player, playerDispatch, messageHandler){
     var progress = resources[id].progress;
 
     if(progress + resources[id].rate >= 100){
         if(!addEssence(resources[id].value, player, playerDispatch)){
-            //TODO: throw warning message
+            messageHandler("Consuming " + resources[id].name + " will waste some essence, increase your capacity or spend some essence", "errorMessage");
         } else {
             progress = 0;
             resourcesDispatch({
