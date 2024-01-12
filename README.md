@@ -9,14 +9,14 @@ Current functionality:
 * Gain Essence!
 * Expand Influence!
 * Speed up time with Contemplation!
-  * Contemplation gained while game not in focus
+  * Contemplation gained while game not in focus or offline
+  * Offline progress is not currently implemented, and is a low priority in favor of Contemplation
 * Ability to do only one thing at a time!
   * This is intentional and will change with research
+* Saving!
+  * Currently 10-minute auto-save and a manual save button in the Settings tab
 
 Upcoming functionality (roughly in order of implemenation):
-* Saving!
-  * Including import/export and hard reset
-* Offline gain of Contemplation!
 * Research!
 * Messages!
 * Constructs!
