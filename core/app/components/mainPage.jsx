@@ -140,8 +140,8 @@ export function MainPage({isActive, saveHandler, currentSave, lastUpdate, lastUp
     }
 
     function save(){
-        const newState = {
-            influence: player.influence,
+        var newState = {
+            influence: player.influenceVolume,
             essence: player.essence,
             contemplation: player.contemplation,
             lastUpdate: lastUpdate,
