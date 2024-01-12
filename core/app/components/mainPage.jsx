@@ -174,7 +174,7 @@ export function MainPage({isActive, saveHandler, currentSave, lastUpdate, lastUp
             <ResearchColumn />
             <MessageBox messageList={messageList}/>
 
-            <Debug handler={messageHandler}/>
+            {/*<Debug handler={messageHandler}/>*/}
         </div>
     )
 }
