@@ -96,6 +96,11 @@ button{
     color: #855125;
 }
 
+.buttonFlavorText{
+    font-style: italic;
+    font-size: 10px;
+}
+
 .buttonActive{
     border: 4px solid #855125;
 }

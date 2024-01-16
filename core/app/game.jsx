@@ -58,6 +58,7 @@ export function Game(){
     function updateWithLoadedData(loaded){
         updateAllResources(loaded, resources, resourcesDispatch);
         updateAllPlayer(loaded, playerDispatch);
+        //TODO: update research
     }
     
     const save = (state) => {

@@ -5,7 +5,7 @@ import { InfluenceColumn } from "./influence/influenceColumn.jsx"
 import { ConstructsColumn } from "./constructs/constructsColumn.jsx"
 import { ResearchColumn } from "./research/researchColumn.jsx"
 import { MessageBox } from "./messages/messageBox.jsx"
-import { Debug } from "./debug.jsx"
+import { Debug } from "./test/debug.jsx"
 
 import { usePlayer, usePlayerDispatch } from "./player/playerContext.jsx"
 import { useResources, useResourcesDispatch } from "./resources/resourcesContext.jsx"

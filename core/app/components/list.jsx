@@ -18,7 +18,8 @@ export function List({items, isActive=true}){
                     <Button
                         content={<>
                             {Object.hasOwn(item, "title") ? <span className="buttonTitle">{item.title}</span> : <></>}
-                            {Object.hasOwn(item, "text") ? <><div className="buttonText">{item.text}</div><br></br></> : <></>}
+                            {Object.hasOwn(item, "flavorText") ? <><div className="buttonFlavorText">{item.flavorText}</div></> : <></>}
+                            {Object.hasOwn(item, "text") ? <><div className="buttonText">{item.text}</div></> : <></>}
                             {Object.hasOwn(item, "effect") ? <><div className="buttonEffect">{item.effect}</div><br></br></> : <></>}
                             {Object.hasOwn(item, "cost") ? <div className="buttonCost">{item.cost}</div> : <></>}
                         </>}

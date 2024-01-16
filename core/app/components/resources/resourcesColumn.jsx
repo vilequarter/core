@@ -44,6 +44,7 @@ export function ResourcesColumn({speed, speedHandler, messageHandler}){
             items.push({
                 title: resource.name,
                 text: "Available: " + resource.getAvailable(player) + (resource.type == "volume" ? " m³" : ""),
+                flavorText: resource.flavorText,
                 cost: "Value: " + resource.value + " essence " + (resource.type == "volume" ? "per m³" : "each"),
                 handler: () => toggleResource(resource.id),
                 className: (resource.active ? "buttonActive" : ""),

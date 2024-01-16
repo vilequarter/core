@@ -20,5 +20,6 @@ Current functionality:
 Upcoming functionality (roughly in order of implementation):
 * Research!
 * Constructs!
+* Changelog!
 * Less-ugly layout!
 * Themes!
