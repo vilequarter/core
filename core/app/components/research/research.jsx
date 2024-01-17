@@ -9,11 +9,12 @@
     effect: function(){},
     unlock: function(){},
     unlocked: false,
-    complete: false
+    complete: false,
+    active: false
 },
 */
 
-export let research = [
+export const initialResearch = [
     {
         id: 0,
         name: "Influence Awareness",
@@ -23,8 +24,9 @@ export let research = [
         effectDescription: "Unlocks Influence Expansion",
         effect: function(){},
         unlock: function(){},
-        unlocked: false,
-        complete: false
+        unlocked: true,
+        complete: false,
+        active: false
     },
     {
         id: 1,
@@ -36,7 +38,8 @@ export let research = [
         effect: function(){},
         unlock: function(){},
         unlocked: false,
-        complete: false
+        complete: false,
+        active: false
     },
     {
         id: 2,
@@ -48,7 +51,8 @@ export let research = [
         effect: function(){},
         unlock: function(){},
         unlocked: false,
-        complete: false
+        complete: false,
+        active: false
     },
     {
         id: 3,
@@ -60,7 +64,8 @@ export let research = [
         effect: function(){},
         unlock: function(){},
         unlocked: false,
-        complete: false
+        complete: false,
+        active: false
     },
     {
         id: 4,
@@ -72,7 +77,8 @@ export let research = [
         effect: function(){},
         unlock: function(){},
         unlocked: false,
-        complete: false
+        complete: false,
+        active: false
     },
     {
         id: 5,
@@ -84,7 +90,8 @@ export let research = [
         effect: function(){},
         unlock: function(){},
         unlocked: false,
-        complete: false
+        complete: false,
+        active: false
     },
     {
         id: 6,
@@ -96,7 +103,8 @@ export let research = [
         effect: function(){},
         unlock: function(){},
         unlocked: false,
-        complete: false
+        complete: false,
+        active: false
     },
     {
         id: 7,
@@ -108,6 +116,7 @@ export let research = [
         effect: function(){},
         unlock: function(){},
         unlocked: false,
-        complete: false
+        complete: false,
+        active: false
     },
 ]

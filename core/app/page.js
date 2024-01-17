@@ -1,6 +1,5 @@
-/*
-TODO:
-    
+/* TODO
+    messageContext
 */
 
 "use client";
@@ -12,6 +11,7 @@ import { PlayerProvider } from './components/player/playerContext';
 import { ResourcesProvider } from './components/resources/resourcesContext';
 
 import { Game } from './game';
+import { ResearchProvider } from './components/research/researchContext';
 
 
 
@@ -23,9 +23,11 @@ export default function Home() {
             </Head>
             <PlayerProvider>
                 <ResourcesProvider>
-                    <Game
-                
-                    />
+                    <ResearchProvider>
+                        <Game
+
+                        />
+                    </ResearchProvider>
                 </ResourcesProvider>
             </PlayerProvider>
 

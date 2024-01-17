@@ -1,31 +1,53 @@
 import { useState } from "react";
 
-import { research } from "./research";
 import { TabSwitch } from "../tabs";
 import { List } from "../list";
+import { addAction, removeAction, removeEssence } from "../player/playerFunctions";
+import { usePlayer, usePlayerDispatch } from "../player/playerContext";
+import { useResearch, useResearchDispatch } from "./researchContext";
+import { useResources } from "../resources/resourcesContext";
+import { round } from "../functions";
 
-export function ResearchColumn(){
+export function ResearchColumn({messageHandler}){
     const [activeIndex, setActiveIndex] = useState(0);
+
+    const research = useResearch();
+    const researchDispatch = useResearchDispatch();
+    const player = usePlayer();
+    const playerDispatch = usePlayerDispatch();
 
     let availableItems = [];
     let completedItems = [];
 
-    research.forEach((research) =>{
-        if(research.complete){
+    const toggleResearch = (id) => {
+        if(research[id].active){
+            removeAction(playerDispatch);
+            researchDispatch({id: id, type: 'deactivateResearch'});
+        } else if(!addAction(player, playerDispatch)){
+            messageHandler("Not enough available actions, cancel an activity first", "errorMessage");
+        } else {
+            researchDispatch({id: id, type: 'activateResearch'});
+        }
+    }
+
+    research.forEach((r) =>{
+        if(r.complete){
             completedItems.push({
-                title: research.name,
-                text: research.flavorText,
-                effect: research.effectDescription,
+                title: r.name,
+                text: r.flavorText,
+                effect: r.effectDescription,
                 handler: () => null
             })
         }
-        else if(research.unlocked){
+        else if(r.unlocked){
             availableItems.push({
-                title: research.name,
-                text: research.flavorText,
-                effect: research.effectDescription,
-                cost: research.essencePaid + " / " + research.essenceCost + " essence",
-                handler: () => null
+                title: r.name,
+                text: r.flavorText,
+                effect: r.effectDescription,
+                cost: round(r.essencePaid) + " / " + r.essenceCost + " essence",
+                handler: () => toggleResearch(r.id),
+                className: r.active ? "buttonActive" : "",
+                progress: r.essencePaid > 0 ? (100 * (r.essencePaid / r.essenceCost)) : 0
             })
         }
     })
@@ -51,3 +73,4 @@ export function ResearchColumn(){
         </div>
     )
 }
+

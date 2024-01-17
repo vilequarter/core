@@ -12,12 +12,16 @@ import { useResources, useResourcesDispatch } from "./resources/resourcesContext
 import { addAction, removeAction } from "./player/playerFunctions.jsx"
 import { consumeVolume, consumeDiscrete } from "./resources/resourcesFunctions.jsx"
 import { addEssence, addContemplation, removeEssence, removeContemplation } from "./player/playerFunctions.jsx"
+import { doResearch } from "./research/researchFunctions.jsx"
+import { useResearch, useResearchDispatch } from "./research/researchContext.jsx"
 
 export function MainPage({isActive, saveHandler, currentSave, lastUpdate, lastUpdateHandler, messageList, messageHandler}){
     const player = usePlayer();
     const playerDispatch = usePlayerDispatch();
     const resources = useResources();
     const resourcesDispatch = useResourcesDispatch();
+    const research = useResearch();
+    const researchDispatch = useResearchDispatch();
 
     const [gameSpeed, setGameSpeed] = useState(1);
     function changeGameSpeed(value){
@@ -143,7 +147,7 @@ export function MainPage({isActive, saveHandler, currentSave, lastUpdate, lastUp
     }
     
     function updateActiveResearch(){
-        
+        doResearch(research, researchDispatch, player, playerDispatch, resources, resourcesDispatch, messageHandler);
     }
 
     function save(){
@@ -161,7 +165,16 @@ export function MainPage({isActive, saveHandler, currentSave, lastUpdate, lastUp
             newState.consumed[r.id] = r.consumed;
             if(r.type === "discrete") newState.discreteProgress[r.id] = r.progress;
         })
-        //TODO: update research save
+        research.map((r) => {
+            if(r.complete) {
+                newState.researchCompleted.push(r.id);
+                return;
+            }
+            if(r.essencePaid > 0){
+                newState.researchProgress.push({id: r.id, progress: r.essencePaid});
+                return;
+            }
+        })
         saveHandler(newState);
         messageHandler("Game Saved", "infoMessage");
     }
@@ -171,7 +184,7 @@ export function MainPage({isActive, saveHandler, currentSave, lastUpdate, lastUp
             <ResourcesColumn speed = {gameSpeed} speedHandler = {changeGameSpeed} messageHandler={messageHandler}/>
             <InfluenceColumn expanding = {expanding} expandingHandler = {toggleExpansion}/>
             <ConstructsColumn />
-            <ResearchColumn />
+            <ResearchColumn messageHandler={messageHandler}/>
             <MessageBox messageList={messageList}/>
 
             {/*<Debug handler={messageHandler}/>*/}

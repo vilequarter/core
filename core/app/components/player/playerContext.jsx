@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useReducer } from 'react';
+import { createContext, useContext, useReducer } from 'react';
 
 import { round } from '../functions';
 
@@ -15,6 +15,7 @@ export function PlayerProvider({ children }) {
         maxEssenceBaseModifier: 0,
         getMaxEssence: function(){return (this.baseMaxEssence + this.maxEssenceBaseModifier) * this.maxEssenceMultiplier},
     
+        influenceUnlocked: false,
         influenceVolume: 65.45,
         getInfluenceRadius: function(){return round(Math.cbrt(.75 * this.influenceVolume / Math.PI))},
         baseExpandCost: .1,
@@ -155,6 +156,12 @@ function playerReducer(player, action){
             return({
                 ...player,
                 contemplation: (player.contemplation - action.value)
+            })
+        }
+        case 'unlockInfluence':{
+            return({
+                ...player,
+                influenceUnlocked: true
             })
         }
         case 'updateAll': {

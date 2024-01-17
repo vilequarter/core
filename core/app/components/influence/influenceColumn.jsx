@@ -21,7 +21,8 @@ export function InfluenceColumn({expanding, expandingHandler}){
                     <span className="buttonCost">Costs {player.getExpandCost()} essence per m³</span>
                 </>}
                 handler = {() => expandingHandler()}
-                className = {expanding ? "buttonActive" : ""}/>
+                className = {expanding ? "buttonActive" : ""}
+                display = {player.influenceUnlocked}/>
             {/*<InfluenceVisual />*/}
         </div>
     )
