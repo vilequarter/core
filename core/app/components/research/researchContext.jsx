@@ -27,7 +27,7 @@ export function ResearchProvider({children}) {
         {
             id: 0,
             name: "Influence Awareness",
-            essenceCost: 25,
+            essenceCost: 15,
             essencePaid: 0,
             flavorText: "There's so much dirt around you, but it seems like you can only reach a very small amount. You try to \"push\" a little further to get at some more...",
             effectDescription: "Unlocks Influence Expansion",
@@ -136,10 +136,13 @@ export function ResearchProvider({children}) {
             flavorText: "You got a little too excited to start expanding, so you were using more essence than you needed to. This should help you be more efficient!",
             effectDescription: "Influence expansion essence cost -50%",
             effect: function(action){
-
+                action.playerDispatch({
+                    type: 'adjustExpandCostMultiplier',
+                    value: 1
+                })
             },
             unlock: function(player, resources, research){
-
+                return (player.influenceVolume >= 70);
             },
             unlocked: false,
             complete: false,

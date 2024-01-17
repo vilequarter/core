@@ -123,6 +123,7 @@ function playerReducer(player, action){
             })
         }
         case 'adjustExpandCostMultiplier': {
+            console.log(player.expandCostMultiplier + action.value);
             return({
                 ...player,
                 expandCostMultiplier: (player.expandCostMultiplier + action.value)
