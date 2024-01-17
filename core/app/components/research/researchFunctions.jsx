@@ -6,7 +6,7 @@ export function doResearch(research, researchDispatch, player, playerDispatch, r
             if(r.essencePaid >= r.essenceCost){
                 researchDispatch({id: r.id, type: 'completeResearch', playerDispatch: playerDispatch, resourcesDispatch: resourcesDispatch});
                 removeAction(playerDispatch);
-                messageHandler("Research " + r.name + " complete!", "infoMessage");
+                messageHandler("Research \"" + r.name + "\" complete!", "infoMessage");
                 return;
             }
             if(softlockCheck(player, resources)){
@@ -23,7 +23,7 @@ export function doResearch(research, researchDispatch, player, playerDispatch, r
             } else {
                 researchDispatch({id: r.id, type: 'deactivateResearch'});
                 removeAction(playerDispatch);
-                messageHandler("Not enough essence, " + r.name + " cancelled", "infoMessage");
+                messageHandler("Not enough essence, \"" + r.name + "\" cancelled", "infoMessage");
             }
         }
         if(!r.unlocked && r.unlock(player, resources, research)){

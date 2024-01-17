@@ -13,8 +13,8 @@ export function ResourcesProvider({ children }) {
             type: "volume",
             flavorText: "Bland but filling",
             ratio: .4, //multiplied by influence to get total amount
-            value: 1, //per m^3
-            rate: (1/10), //default 1/second
+            value: 1.5, //per m^3
+            rate: .1, //volume per tick
             unlocked: true,
             consumed: 0,
             progress: 0,
@@ -208,6 +208,18 @@ function resourcesReducer(resources, action){
                         return{
                             ...resource,
                             active: false
+                        }
+                    }
+                    case 'editResourceValue':{
+                        return{
+                            ...resource,
+                            value: resource.value + action.value
+                        }
+                    }
+                    case 'editResourceRate':{
+                        return{
+                            ...resource,
+                            rate: resource.rate + action.value
                         }
                     }
                     case 'updateProgress':{

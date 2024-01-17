@@ -18,14 +18,15 @@ export function PlayerProvider({ children }) {
         influenceUnlocked: false,
         influenceVolume: 65.45,
         getInfluenceRadius: function(){return round(Math.cbrt(.75 * this.influenceVolume / Math.PI))},
-        baseExpandCost: .1,
+        baseExpandCost: .1, //essence per tick
         expandCostMultiplier: 1,
         expandCostBaseModifier: 0,
         getExpandCost: function(){return (this.baseExpandCost - this.expandCostBaseModifier) / this.expandCostMultiplier},
-        baseExpandRate: (1/10),
+        baseExpandRate: .1, //volume per tick
         expandRateMultiplier: 1,
         expandRateBaseModifier: 0,
         getExpandRate: function(){return (this.baseExpandRate + this.expandRateBaseModifier) * this.expandRateMultiplier},
+        getExpandCostPerVolume: function(){return (this.getExpandCost() * (1/this.getExpandRate()))},
     
         activeActions: 0,
         maxActions: 1,

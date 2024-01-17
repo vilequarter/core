@@ -37,7 +37,7 @@ export function ResearchProvider({children}) {
                 })
             },
             unlock: function(player, resources, research){
-                return (player.essence >= 10);
+                return (player.essence >= 10 && research[4].complete);
             },
             unlocked: false,
             complete: false,
@@ -100,12 +100,16 @@ export function ResearchProvider({children}) {
             essenceCost: 10,
             essencePaid: 0,
             flavorText: "Most properties of essence are commonly known, but you doubt many could describe its \"taste\".",
-            effectDescription: "Dirt essence value +50%",
+            effectDescription: "Increase Dirt essence value by 1 per m³",
             effect: function(action){
-
+                action.resourcesDispatch({
+                    id: 0,
+                    type: 'editResourceValue',
+                    value: 1
+                })
             },
             unlock: function(player, resources, research){
-
+                return(resources[0].consumed >= 5);
             },
             unlocked: false,
             complete: false,
