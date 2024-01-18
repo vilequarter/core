@@ -4,6 +4,10 @@ export const ResearchContext = createContext(null);
 export const ResearchDispatchContext = createContext(null);
 
 export function ResearchProvider({children}) {
+    /* Possible Unlock Breakpoints
+        influenceVolume >= 200
+        influenceRadius >= 5
+    */
     /*
         {
             id: ,
@@ -49,12 +53,16 @@ export function ResearchProvider({children}) {
             essenceCost: 50,
             essencePaid: 0,
             flavorText: "You've started to think of consuming dirt as \"eating\" it. This shift in perspective makes it more enjoyable!",
-            effectDescription: "Dirt consumption rate +100%",
+            effectDescription: "Dirt consumption rate +1 m³/second",
             effect: function(action){
-
+                action.resourcesDispatch({
+                    id: 0,
+                    type: 'editResourceRate',
+                    value: .1
+                })
             },
             unlock: function(player, resources, research){
-
+                return(resources[0].consumed >= 50);
             },
             unlocked: false,
             complete: false,
@@ -68,10 +76,13 @@ export function ResearchProvider({children}) {
             flavorText: "You've consumed every bit of dirt you can reach, but there's a whole lot more out there!",
             effectDescription: "Influence expansion rate +100%",
             effect: function(action){
-
+                action.playerDispatch({
+                    type: 'adjustExpandRateMultiplier',
+                    value: 1
+                })
             },
             unlock: function(player, resources, research){
-
+                return(research[6].complete && resources[0].getAvailable(player) == 0);
             },
             unlocked: false,
             complete: false,
@@ -82,13 +93,16 @@ export function ResearchProvider({children}) {
             name: "Meta-Research",
             essenceCost: 200,
             essencePaid: 0,
-            flavorText: "You're a rock that can think. You never thought about that before.",
-            effectDescription: "Research rate +50%",
+            flavorText: "You're a rock that can think. That's weird to think about.",
+            effectDescription: "Research rate +1/second",
             effect: function(action){
-
+                action.playerDispatch({
+                    type: 'adjustResearchRateMultiplier',
+                    value: 1
+                })
             },
             unlock: function(player, resources, research){
-
+                return(research[1].complete);
             },
             unlocked: false,
             complete: false,
@@ -123,10 +137,13 @@ export function ResearchProvider({children}) {
             flavorText: "You've had to eat around these tiny hard things for a while, but now you feel like you should be able to break them down too.",
             effectDescription: "Unlock Pebbles",
             effect: function(action){
-
+                action.resourcesDispatch({
+                    id: 1,
+                    type: 'unlockResource'
+                })
             },
             unlock: function(player, resources, research){
-
+                return(resources[0].consumed >= 1000);
             },
             unlocked: false,
             complete: false,
@@ -135,7 +152,7 @@ export function ResearchProvider({children}) {
         {
             id: 6,
             name: "Controlled Expansion",
-            essenceCost: 5,
+            essenceCost: 10,
             essencePaid: 0,
             flavorText: "You got a little too excited to start expanding, so you were using more essence than you needed to. This should help you be more efficient!",
             effectDescription: "Influence expansion essence cost -50%",
@@ -160,15 +177,20 @@ export function ResearchProvider({children}) {
             flavorText: "Try as you might, you can't fit any more essence in your core. Maybe there's a way to store it elsewhere?",
             effectDescription: "Unlock Essence Cores",
             effect: function(action){
-
+                //TODO: implement constructsContext
+                action.constructsDispatch({
+                    type: 'unlockConstruct',
+                    id: 0
+                })
             },
             unlock: function(player, resources, research){
-
+                return(player.essence >= 100);
             },
             unlocked: false,
             complete: false,
             active: false
         },
+        
     ]
 
     const [research, dispatch] = useReducer(

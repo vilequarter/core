@@ -61,7 +61,7 @@ export function MainPage({isActive, saveHandler, currentSave, lastUpdate, lastUp
         realTimeLoopRef.current = setInterval(() => {
             let time = Math.floor((Date.now() - lastUpdate)/1000);
             if(time >= 1){
-                addContemplation(time, playerDispatch);
+                addContemplation(10 * time, playerDispatch);
             }
         }, 1000);
         return () => {
@@ -159,6 +159,7 @@ export function MainPage({isActive, saveHandler, currentSave, lastUpdate, lastUp
             consumed: [0,0,0,0,0,0,0,0,0,0],
             discreteProgress: [0,0,0,0,0,0,0,0,0,0],
             researchCompleted: [],
+            researchUnlocked: [],
             researchProgress: []
         };
         resources.forEach((r) => {
@@ -170,8 +171,11 @@ export function MainPage({isActive, saveHandler, currentSave, lastUpdate, lastUp
                 newState.researchCompleted.push(r.id);
                 return;
             }
+            if(r.unlocked) {
+                newState.researchUnlocked.push(r.id);
+            }
             if(r.essencePaid > 0){
-                newState.researchProgress.push({id: r.id, progress: r.essencePaid});
+                newState.researchProgress.push({id: r.id, value: r.essencePaid});
                 return;
             }
         })
@@ -187,7 +191,9 @@ export function MainPage({isActive, saveHandler, currentSave, lastUpdate, lastUp
             <ResearchColumn messageHandler={messageHandler}/>
             <MessageBox messageList={messageList}/>
 
-            {/*<Debug handler={messageHandler}/>*/}
+            {
+                process.env.NODE_ENV == 'development' && <Debug handler={messageHandler} player={player} resources={resources}/>
+            }
         </div>
     )
 }

@@ -19,7 +19,7 @@ export function doResearch(research, researchDispatch, player, playerDispatch, r
             const rate = player.getResearchRate();
             const essenceToPay = rate < essenceRemaining ? rate : essenceRemaining;
             if(removeEssence(essenceToPay, player, playerDispatch)){
-                researchDispatch({id: r.id, type: 'payEssence', value: essenceToPay})
+                researchDispatch({id: r.id, type: 'payEssence', value: essenceToPay});
             } else {
                 researchDispatch({id: r.id, type: 'deactivateResearch'});
                 removeAction(playerDispatch);
@@ -36,14 +36,44 @@ export function doResearch(research, researchDispatch, player, playerDispatch, r
 function softlockCheck(player, resources){
     const expandCost = player.getExpandCost();
     const researchCost = player.getResearchRate();
-    if((player.essence - researchCost) <= expandCost){
-        var available = true;
-        resources.map(r => {
-            if(r.getAvailable(player) > 0){
-                available = false;
-            }
-        })
-        return available;
+    var softlockRisk = false;
+    resources.every(r => {
+        if(r.unlocked && r.getAvailable(player) <= 0){
+            softlockRisk = true;
+            return false;
+        }
+        return true;
+    })
+    if(softlockRisk && ((player.essence - researchCost) <= (10 * expandCost))) {
+        console.log("risk of softlock");
+        return true;
     }
     return false;
+}
+
+export function updateAllResearch(loaded, researchDispatch, playerDispatch, resourcesDispatch){
+    const complete = [...loaded.researchCompleted];
+    complete.forEach(r => {
+        researchDispatch({
+            id: r,
+            type: 'completeResearch',
+            playerDispatch: playerDispatch,
+            resourcesDispatch: resourcesDispatch
+        })
+    });
+    const unlocked = [...loaded.researchUnlocked];
+    unlocked.forEach(r => {
+        researchDispatch({
+            id: r,
+            type: 'unlockResearch'
+        })
+    })
+    const progress = [...loaded.researchProgress];
+    progress.forEach(r => {
+        researchDispatch({
+            type: 'payEssence',
+            value: r.value,
+            id: r.id
+        })
+    })
 }

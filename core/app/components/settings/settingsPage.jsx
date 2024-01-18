@@ -4,11 +4,13 @@ import { ChangelogLink } from "./changelogLink"
 import { SaveButtons } from "./saveButtons"
 import { usePlayer } from "../player/playerContext"
 import { useResources } from "../resources/resourcesContext"
+import { useResearch } from "../research/researchContext"
 
 
 export function SettingsPage({isActive, currentSave, saveHandler, deleteHandler, exportHandler, importHandler, lastUpdate, messageHandler}){
     const player = usePlayer();
     const resources = useResources();
+    const research = useResearch();
 
     const save = () => {
         var newState = {
@@ -19,13 +21,26 @@ export function SettingsPage({isActive, currentSave, saveHandler, deleteHandler,
             consumed: [0,0,0,0,0,0,0,0,0,0],
             discreteProgress: [0,0,0,0,0,0,0,0,0,0],
             researchCompleted: [],
+            researchUnlocked: [],
             researchProgress: []
         };
         resources.forEach((r) => {
             newState.consumed[r.id] = r.consumed;
             if(r.type === "discrete") newState.discreteProgress[r.id] = r.progress;
         })
-        //TODO: update research save
+        research.map((r) => {
+            if(r.complete) {
+                newState.researchCompleted.push(r.id);
+                return;
+            }
+            if(r.unlocked) {
+                newState.researchUnlocked.push(r.id);
+            }
+            if(r.essencePaid > 0){
+                newState.researchProgress.push({id: r.id, value: r.essencePaid});
+                return;
+            }
+        })
         saveHandler(newState);
         messageHandler("Game Saved", "infoMessage");
     }

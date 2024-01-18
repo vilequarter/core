@@ -26,12 +26,12 @@ export function PlayerProvider({ children }) {
         expandRateMultiplier: 1,
         expandRateBaseModifier: 0,
         getExpandRate: function(){return (this.baseExpandRate + this.expandRateBaseModifier) * this.expandRateMultiplier},
-        getExpandCostPerVolume: function(){return (this.getExpandCost() * (1/this.getExpandRate()))},
+        getExpandCostPerSecond: function(){return (this.getExpandCost() * 10)},
     
         activeActions: 0,
         maxActions: 1,
     
-        baseResearchRate: (1/10),
+        baseResearchRate: .1, //essence spent / research progress per tick
         researchRateMultiplier: 1,
         researchRateBaseModifier: 0,
         getResearchRate: function(){return (this.baseResearchRate + this.researchRateBaseModifier) * this.researchRateMultiplier}
@@ -124,7 +124,6 @@ function playerReducer(player, action){
             })
         }
         case 'adjustExpandCostMultiplier': {
-            console.log(player.expandCostMultiplier + action.value);
             return({
                 ...player,
                 expandCostMultiplier: (player.expandCostMultiplier + action.value)
@@ -139,7 +138,7 @@ function playerReducer(player, action){
         case 'adjustResearchRateMultiplier': {
             return({
                 ...player,
-                researchRateMultiplier: (player.researchRateModifier + action.value)
+                researchRateMultiplier: (player.researchRateMultiplier + action.value)
             })
         }
         case 'adjustResearchRateBase': {
