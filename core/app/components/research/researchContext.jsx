@@ -5,11 +5,11 @@ export const ResearchDispatchContext = createContext(null);
 
 export function ResearchProvider({children}) {
     /* Possible Unlock Breakpoints
-        influenceVolume >= 200
-        influenceRadius >= 5
+        essence == 300
     */
     /* Possible Effects
-        influence expansion rate increase (@200 volume?)
+        maxActions +1
+        multiplier to max essence (essence spiral)
     */
     /*
         {
@@ -28,7 +28,7 @@ export function ResearchProvider({children}) {
             unlocked: false,
             complete: false,
             active: false
-        }
+        },
     */
     const initialResearch = [
         {
@@ -39,6 +39,7 @@ export function ResearchProvider({children}) {
             flavorText: "There's so much dirt around you, but it seems like you can only reach a very small amount. You try to \"push\" a little further to get at some more...",
             effectDescription: "Unlocks Influence Expansion",
             effect: function(action){
+                console.log(this.name);
                 action.playerDispatch({
                     type: 'unlockInfluence'
                 })
@@ -58,6 +59,7 @@ export function ResearchProvider({children}) {
             flavorText: "You've started to think of consuming dirt as \"eating\" it. This shift in perspective makes it more enjoyable!",
             effectDescription: "Dirt consumption rate +1 m³/second",
             effect: function(action){
+                console.log(this.name);
                 action.resourcesDispatch({
                     id: 0,
                     type: 'editResourceRate',
@@ -77,11 +79,12 @@ export function ResearchProvider({children}) {
             essenceCost: 15,
             essencePaid: 0,
             flavorText: "You've consumed every bit of dirt you can reach, but there's a whole lot more out there!",
-            effectDescription: "Influence expansion rate +100%",
+            effectDescription: "Base Influence expansion rate +1m³ per second",
             effect: function(action){
+                console.log(this.name);
                 action.playerDispatch({
-                    type: 'adjustExpandRateMultiplier',
-                    value: 1
+                    type: 'adjustExpandRateBase',
+                    value: .1
                 })
             },
             unlock: function(player, resources, research){
@@ -94,11 +97,12 @@ export function ResearchProvider({children}) {
         {
             id: 3,
             name: "Meta-Research",
-            essenceCost: 200,
+            essenceCost: 75,
             essencePaid: 0,
             flavorText: "You're a rock that can think. That's weird to think about.",
-            effectDescription: "Research rate +1/second",
+            effectDescription: "Base Research rate +1/second",
             effect: function(action){
+                console.log(this.name);
                 action.playerDispatch({
                     type: 'adjustResearchRateMultiplier',
                     value: 1
@@ -119,6 +123,7 @@ export function ResearchProvider({children}) {
             flavorText: "Most properties of essence are commonly known, but you doubt many could describe its \"taste\".",
             effectDescription: "Increase Dirt essence value by 1 per m³",
             effect: function(action){
+                console.log(this.name);
                 action.resourcesDispatch({
                     id: 0,
                     type: 'editResourceValue',
@@ -140,6 +145,7 @@ export function ResearchProvider({children}) {
             flavorText: "You've had to eat around these tiny hard things for a while, but now you feel like you should be able to break them down too.",
             effectDescription: "Unlock Pebbles",
             effect: function(action){
+                console.log(this.name);
                 action.resourcesDispatch({
                     id: 1,
                     type: 'unlockResource'
@@ -160,6 +166,7 @@ export function ResearchProvider({children}) {
             flavorText: "You got a little too excited to start expanding, so you were using more essence than you needed to. This should help you be more efficient!",
             effectDescription: "Influence expansion essence cost -50%",
             effect: function(action){
+                console.log(this.name);
                 action.playerDispatch({
                     type: 'adjustExpandCostMultiplier',
                     value: 1
@@ -180,6 +187,7 @@ export function ResearchProvider({children}) {
             flavorText: "Try as you might, you can't fit any more essence in your core. Maybe there's a way to store it elsewhere?",
             effectDescription: "Unlock Essence Cores",
             effect: function(action){
+                console.log(this.name);
                 action.constructsDispatch({
                     type: 'unlockConstruct',
                     id: 0
@@ -192,7 +200,49 @@ export function ResearchProvider({children}) {
             complete: false,
             active: false
         },
-        
+        {
+            id: 8,
+            name: "Forced Expansion",
+            essenceCost: 50,
+            essencePaid: 0,
+            flavorText: "You're getting the hang of pushing out your will, and you think you can do it faster now.",
+            effectDescription: "Influence expansion rate x2",
+            effect: function(action){
+                console.log(this.name);
+                console.log("ForcedExpansion");
+                action.playerDispatch({
+                    type: 'adjustExpandRateMultiplier',
+                    value: 1
+                })
+            },
+            unlock: function(player, resources, research){
+                return (player.influenceVolume >= 200)
+            },
+            unlocked: false,
+            complete: false,
+            active: false
+        },
+        {
+            id: 9,
+            name: "Expanded Mind",
+            essenceCost: 150,
+            essencePaid: 0,
+            flavorText: "It's hard to judge distance as a rock, but you think you're now able to reach 5 meters out in every direction now! You feel motivated by this milestone!",
+            effectDescription: "Research rate x2",
+            effect: function(action){
+                console.log(this.name);
+                action.playerDispatch({
+                    type: 'adjustResearchRateMultiplier',
+                    value: 1
+                })
+            },
+            unlock: function(player, resources, research){
+                return(player.getInfluenceRadius() >= 5)
+            },
+            unlocked: false,
+            complete: false,
+            active: false
+        },
     ]
 
     const [research, dispatch] = useReducer(

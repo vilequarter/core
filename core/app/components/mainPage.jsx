@@ -216,7 +216,7 @@ export function MainPage({isActive, saveHandler, currentSave, lastUpdate, lastUp
             <MessageBox messageList={messageList}/>
 
             {
-                process.env.NODE_ENV == 'development' && <Debug handler={messageHandler} player={player} resources={resources} constructs={constructs}/>
+                process.env.NODE_ENV == 'development' && <Debug handler={messageHandler} player={player} playerDispatch={playerDispatch} resources={resources} constructs={constructs}/>
             }
         </div>
     )

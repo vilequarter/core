@@ -12,9 +12,12 @@ export function ConstructsProvider({children}) {
             description: "An external, artificial essence storage core",
             baseCost: 100,
             costGrowth: 2,
-            cost() {
+            /*
+            cost: function() {
                 return(this.baseCost * Math.pow(this.costGrowth, this.owned));
             },
+            */
+            cost: 100,
             owned: 0,
             effectValue: 100,
             effect: function(playerDispatch){
@@ -102,7 +105,8 @@ function constructsReducer(constructs, action){
                     owned: construct.owned + 1,
                     paid: false,
                     active: false,
-                    progress: 0
+                    progress: 0,
+                    cost: (construct.baseCost * Math.pow(construct.costGrowth, construct.owned + 1))
                 }
             }
             default: {

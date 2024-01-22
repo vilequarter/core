@@ -69,7 +69,7 @@ export function ConstructsColumn({messageHandler}){
                 title: construct.name + (construct.owned > 0 ? " (" + construct.owned + ")" : ""),
                 text: construct.description,
                 effect: construct.effectDescription,
-                cost: "Cost: " + construct.cost() + " essence",
+                cost: "Cost: " + construct.cost + " essence",
                 flavorText: "Build progress: " + (construct.paid ? (construct.progress + " / 100") : "Not Bought"),
                 handler: () => toggleConstruct(construct.id),
                 progress: construct.progress,
