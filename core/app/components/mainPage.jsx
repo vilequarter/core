@@ -14,6 +14,8 @@ import { consumeVolume, consumeDiscrete } from "./resources/resourcesFunctions.j
 import { addEssence, addContemplation, removeEssence, removeContemplation } from "./player/playerFunctions.jsx"
 import { doResearch } from "./research/researchFunctions.jsx"
 import { useResearch, useResearchDispatch } from "./research/researchContext.jsx"
+import { useConstructs, useConstructsDispatch } from "./constructs/constructsContext.jsx"
+import { doConstructs } from "./constructs/constructsFunctions.jsx"
 
 export function MainPage({isActive, saveHandler, currentSave, lastUpdate, lastUpdateHandler, messageList, messageHandler}){
     const player = usePlayer();
@@ -22,6 +24,8 @@ export function MainPage({isActive, saveHandler, currentSave, lastUpdate, lastUp
     const resourcesDispatch = useResourcesDispatch();
     const research = useResearch();
     const researchDispatch = useResearchDispatch();
+    const constructs = useConstructs();
+    const constructsDispatch = useConstructsDispatch();
 
     const [gameSpeed, setGameSpeed] = useState(1);
     function changeGameSpeed(value){
@@ -107,6 +111,7 @@ export function MainPage({isActive, saveHandler, currentSave, lastUpdate, lastUp
     
         updateActiveResearch();
 
+        updateActiveConstructs();
     }
 
     function consumeActiveResources(){
@@ -147,7 +152,11 @@ export function MainPage({isActive, saveHandler, currentSave, lastUpdate, lastUp
     }
     
     function updateActiveResearch(){
-        doResearch(research, researchDispatch, player, playerDispatch, resources, resourcesDispatch, messageHandler);
+        doResearch(research, researchDispatch, player, playerDispatch, resources, resourcesDispatch, constructsDispatch, messageHandler);
+    }
+
+    function updateActiveConstructs(){
+        doConstructs(playerDispatch, constructs, constructsDispatch, messageHandler)
     }
 
     function save(){
@@ -160,7 +169,8 @@ export function MainPage({isActive, saveHandler, currentSave, lastUpdate, lastUp
             discreteProgress: [0,0,0,0,0,0,0,0,0,0],
             researchCompleted: [],
             researchUnlocked: [],
-            researchProgress: []
+            researchProgress: [],
+            constructs: []
         };
         resources.forEach((r) => {
             newState.consumed[r.id] = r.consumed;
@@ -179,6 +189,9 @@ export function MainPage({isActive, saveHandler, currentSave, lastUpdate, lastUp
                 return;
             }
         })
+        constructs.forEach((c) => {
+            newState.constructs.push(c);
+        })
         saveHandler(newState);
         messageHandler("Game Saved", "infoMessage");
     }
@@ -187,12 +200,12 @@ export function MainPage({isActive, saveHandler, currentSave, lastUpdate, lastUp
         <div className={isActive ? "display-flex" : "display-none"}>
             <ResourcesColumn speed = {gameSpeed} speedHandler = {changeGameSpeed} messageHandler={messageHandler}/>
             <InfluenceColumn expanding = {expanding} expandingHandler = {toggleExpansion}/>
-            <ConstructsColumn />
+            <ConstructsColumn messageHandler={messageHandler}/>
             <ResearchColumn messageHandler={messageHandler}/>
             <MessageBox messageList={messageList}/>
 
             {
-                process.env.NODE_ENV == 'development' && <Debug handler={messageHandler} player={player} resources={resources}/>
+                process.env.NODE_ENV == 'development' && <Debug handler={messageHandler} player={player} resources={resources} constructs={constructs}/>
             }
         </div>
     )

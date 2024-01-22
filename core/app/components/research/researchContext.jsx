@@ -8,6 +8,9 @@ export function ResearchProvider({children}) {
         influenceVolume >= 200
         influenceRadius >= 5
     */
+    /* Possible Effects
+        influence expansion rate increase (@200 volume?)
+    */
     /*
         {
             id: ,
@@ -177,7 +180,6 @@ export function ResearchProvider({children}) {
             flavorText: "Try as you might, you can't fit any more essence in your core. Maybe there's a way to store it elsewhere?",
             effectDescription: "Unlock Essence Cores",
             effect: function(action){
-                //TODO: implement constructsContext
                 action.constructsDispatch({
                     type: 'unlockConstruct',
                     id: 0

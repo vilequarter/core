@@ -1,10 +1,10 @@
 import { removeAction, removeEssence } from "../player/playerFunctions";
 
-export function doResearch(research, researchDispatch, player, playerDispatch, resources, resourcesDispatch, messageHandler){
+export function doResearch(research, researchDispatch, player, playerDispatch, resources, resourcesDispatch, constructsDispatch, messageHandler){
     research.map(r => {
         if(r.active){
             if(r.essencePaid >= r.essenceCost){
-                researchDispatch({id: r.id, type: 'completeResearch', playerDispatch: playerDispatch, resourcesDispatch: resourcesDispatch});
+                researchDispatch({id: r.id, type: 'completeResearch', playerDispatch: playerDispatch, resourcesDispatch: resourcesDispatch, constructsDispatch: constructsDispatch});
                 removeAction(playerDispatch);
                 messageHandler("Research \"" + r.name + "\" complete!", "infoMessage");
                 return;
@@ -51,14 +51,15 @@ function softlockCheck(player, resources){
     return false;
 }
 
-export function updateAllResearch(loaded, researchDispatch, playerDispatch, resourcesDispatch){
+export function updateAllResearch(loaded, researchDispatch, playerDispatch, resourcesDispatch, constructsDispatch){
     const complete = [...loaded.researchCompleted];
     complete.forEach(r => {
         researchDispatch({
             id: r,
             type: 'completeResearch',
             playerDispatch: playerDispatch,
-            resourcesDispatch: resourcesDispatch
+            resourcesDispatch: resourcesDispatch,
+            constructsDispatch: constructsDispatch
         })
     });
     const unlocked = [...loaded.researchUnlocked];

@@ -5,12 +5,14 @@ import { SaveButtons } from "./saveButtons"
 import { usePlayer } from "../player/playerContext"
 import { useResources } from "../resources/resourcesContext"
 import { useResearch } from "../research/researchContext"
+import { useConstructs } from "../constructs/constructsContext"
 
 
 export function SettingsPage({isActive, currentSave, saveHandler, deleteHandler, exportHandler, importHandler, lastUpdate, messageHandler}){
     const player = usePlayer();
     const resources = useResources();
     const research = useResearch();
+    const constructs = useConstructs();
 
     const save = () => {
         var newState = {
@@ -22,7 +24,8 @@ export function SettingsPage({isActive, currentSave, saveHandler, deleteHandler,
             discreteProgress: [0,0,0,0,0,0,0,0,0,0],
             researchCompleted: [],
             researchUnlocked: [],
-            researchProgress: []
+            researchProgress: [],
+            constructs: []
         };
         resources.forEach((r) => {
             newState.consumed[r.id] = r.consumed;
@@ -40,6 +43,9 @@ export function SettingsPage({isActive, currentSave, saveHandler, deleteHandler,
                 newState.researchProgress.push({id: r.id, value: r.essencePaid});
                 return;
             }
+        })
+        constructs.forEach((c) => {
+            newState.constructs.push(c);
         })
         saveHandler(newState);
         messageHandler("Game Saved", "infoMessage");

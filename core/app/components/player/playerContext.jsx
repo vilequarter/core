@@ -34,7 +34,7 @@ export function PlayerProvider({ children }) {
         baseResearchRate: .1, //essence spent / research progress per tick
         researchRateMultiplier: 1,
         researchRateBaseModifier: 0,
-        getResearchRate: function(){return (this.baseResearchRate + this.researchRateBaseModifier) * this.researchRateMultiplier}
+        getResearchRate: function(){return (this.baseResearchRate + this.researchRateBaseModifier) * this.researchRateMultiplier},
     }
 
     const [player, dispatch] = useReducer(

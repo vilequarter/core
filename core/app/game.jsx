@@ -8,9 +8,11 @@ import { useResources, useResourcesDispatch } from "./components/resources/resou
 import { updateAllResources } from "./components/resources/resourcesFunctions";
 import { updateAllPlayer } from "./components/player/playerFunctions";
 import { updateAllResearch } from "./components/research/researchFunctions";
+import { updateAllConstructs } from "./components/constructs/constructsFunctions";
 
 import { decompressFromEncodedURIComponent, compressToEncodedURIComponent } from "../libraries/lz-string-1.5.0/libs/lz-string";
 import { useResearch, useResearchDispatch } from "./components/research/researchContext";
+import { useConstructs, useConstructsDispatch } from "./components/constructs/constructsContext";
 
 export function Game(){
     const player = usePlayer();
@@ -19,6 +21,8 @@ export function Game(){
     const resourcesDispatch = useResourcesDispatch();
     const research = useResearch();
     const researchDispatch = useResearchDispatch();
+    const constructs = useConstructs();
+    const constructsDispatch = useConstructsDispatch();
 
     const [activeIndex, setActiveIndex] = useState(0);
     const [lastUpdate, setLastUpdate] = useState(Date.now());
@@ -40,6 +44,7 @@ export function Game(){
         researchCompleted: [],
         researchUnlocked: [],
         researchProgress: [],
+        constructs: [],
         lastUpdate: Date.now()
     }
 
@@ -63,7 +68,8 @@ export function Game(){
     function updateWithLoadedData(loaded){
         updateAllResources(loaded, resources, resourcesDispatch);
         updateAllPlayer(loaded, playerDispatch);
-        updateAllResearch(loaded, researchDispatch, playerDispatch, resourcesDispatch);
+        updateAllResearch(loaded, researchDispatch, playerDispatch, resourcesDispatch, constructsDispatch);
+        updateAllConstructs(loaded, constructs, constructsDispatch);
     }
     
     const save = (state) => {

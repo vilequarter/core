@@ -16,15 +16,18 @@ Current functionality:
 * Ability to do only one thing at a time!
   * This is intentional and will change with research
 * Research!
-  * Up to unlocking Constructs, about 10 minutes of content
+  * Up to unlocking Constructs
+* Constructs!
+  * Just one right now: Essence Core
 * Saving!
   * Currently 10-minute auto-save
   * Settings tab includes a manual save button, as well as text-formatted export/import and a hard reset button
 * Informational Messages!
+* About 10 minutes of content!
 
 Upcoming functionality (roughly in order of priority):
-* Constructs!
 * More Research!
+* More Constructs!
 * Lore/Story!
 * Changelog!
 * "Win" Condition!

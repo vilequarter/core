@@ -1,5 +1,7 @@
 /* TODO
-    messageContext
+    messageContext?
+
+    option for turning off informational messages (running out of essence/resource, research complete, etc)
 */
 
 "use client";
@@ -12,6 +14,7 @@ import { ResourcesProvider } from './components/resources/resourcesContext';
 
 import { Game } from './game';
 import { ResearchProvider } from './components/research/researchContext';
+import { ConstructsProvider } from './components/constructs/constructsContext';
 
 
 
@@ -24,9 +27,9 @@ export default function Home() {
             <PlayerProvider>
                 <ResourcesProvider>
                     <ResearchProvider>
-                        <Game
-
-                        />
+                        <ConstructsProvider>
+                            <Game/>
+                        </ConstructsProvider>
                     </ResearchProvider>
                 </ResourcesProvider>
             </PlayerProvider>

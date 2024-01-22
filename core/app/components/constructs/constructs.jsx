@@ -22,7 +22,12 @@ export let constructs = [
         },
         owned: 0,
         effectValue: 100,
-        effect: function(){},
+        effect: function(playerDispatch){
+            playerDispatch({
+                type: 'adjustMaxEssenceBase',
+                value: this.effectValue
+            })
+        },
         get effectDescription(){
             return "Increases essence storage by " + this.effectValue;
         },
