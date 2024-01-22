@@ -39,19 +39,24 @@ export function MainPage({isActive, saveHandler, currentSave, lastUpdate, lastUp
     const [saveInterval, setSaveInterval] = useState(Date.now())
     const [saveReady, setSaveReady] = useState(false);
 
+    //basic game loop
     useEffect(() => {
         loopRef.current = setInterval(() => {
             doUpdates();
             if(gameSpeed > 1){
+                //if a speed button is on, remove required contemplation
                 if(!removeContemplation((gameSpeed + 1), player, playerDispatch)){
+                    //if no more contemplation, set game speed back to 1
                     setGameSpeed(1);
                 }
             }
+            //save and reset the save timer
             if(saveReady){
                 save();
                 setSaveReady(false);
                 setSaveInterval(Date.now());
             }
+            //set the last update to now
             lastUpdateHandler(Date.now());
         }, loopDelay);
         
@@ -61,10 +66,13 @@ export function MainPage({isActive, saveHandler, currentSave, lastUpdate, lastUp
     })
 
     //offline time gain interval
+    //seems to only run when tab is inactive, which is fine as that's what this is for anyway
     useEffect(() =>{
         realTimeLoopRef.current = setInterval(() => {
+            //check number of seconds since the last update
             let time = Math.floor((Date.now() - lastUpdate)/1000);
             if(time >= 1){
+                //add ticks since last update to contemplation
                 addContemplation(10 * time, playerDispatch);
             }
         }, 1000);
@@ -77,6 +85,7 @@ export function MainPage({isActive, saveHandler, currentSave, lastUpdate, lastUp
     useEffect(() => {
         var lastSave = saveInterval;
         saveRef.current = setInterval(() => {
+            //if 10 minutes have passed since the last save, save on the next update loop
             if((Date.now() - lastSave) / 1000 >= 300){
                 setSaveReady(true);
             }
@@ -84,11 +93,11 @@ export function MainPage({isActive, saveHandler, currentSave, lastUpdate, lastUp
         return () => {
             clearInterval(saveRef.current);
         }
-    }, [saveReady])
+    }, [saveReady]) //only run when saveReady changes
 
     const [expanding, setExpanding] = useState(false);
     function toggleExpansion(){
-        if(!expanding){
+        if(!expanding){ //attempt to turn on expansion
             if(player.essence < player.getExpandCost()){
                 messageHandler("Not enough essence, can't expand influence", "infoMessage");
                 return;
@@ -98,7 +107,7 @@ export function MainPage({isActive, saveHandler, currentSave, lastUpdate, lastUp
                 return;
             }
             setExpanding(true);
-        } else {
+        } else { //turn off expansion
             removeAction(playerDispatch);
             setExpanding(false);
         }
@@ -114,9 +123,10 @@ export function MainPage({isActive, saveHandler, currentSave, lastUpdate, lastUp
         updateActiveConstructs();
     }
 
+    //TODO: move this function to resourcesFunctions.jsx
     function consumeActiveResources(){
         resources.map(resource => {
-            if(!resource.active){
+            if(!resource.active){ //inactive resources have no change
                 return;
             }
             if(resource.type == "discrete"){
@@ -139,6 +149,7 @@ export function MainPage({isActive, saveHandler, currentSave, lastUpdate, lastUp
     function expandInfluence(){
         if(!expanding) return;
 
+        //if player has enough essence to cover the tick cost of expansion, expand influence
         if(removeEssence(player.getExpandCost(), player, playerDispatch)){
             playerDispatch({
                 type: 'addInfluence',

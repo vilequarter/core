@@ -1,11 +1,3 @@
-function ErrorMessage({errorMessage = ""}){
-    return (
-        <div className="errorMessage">
-            { errorMessage }
-        </div>
-    );
-}
-
 export function Messages({messages}){
     let list = [];
 
