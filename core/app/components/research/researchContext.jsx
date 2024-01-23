@@ -4,10 +4,10 @@ export const ResearchContext = createContext(null);
 export const ResearchDispatchContext = createContext(null);
 
 export function ResearchProvider({children}) {
-    /* Possible Unlock Breakpoints
+    /* Unlock Breakpoints
         essence == 300
     */
-    /* Possible Effects
+    /* Effects
         maxActions +1
         multiplier to max essence (essence spiral)
     */

@@ -10,14 +10,17 @@ import { Debug } from "./test/debug.jsx"
 import { usePlayer, usePlayerDispatch } from "./player/playerContext.jsx"
 import { useResources, useResourcesDispatch } from "./resources/resourcesContext.jsx"
 import { addAction, removeAction } from "./player/playerFunctions.jsx"
-import { consumeVolume, consumeDiscrete } from "./resources/resourcesFunctions.jsx"
-import { addEssence, addContemplation, removeEssence, removeContemplation } from "./player/playerFunctions.jsx"
+import { consumeActiveResources } from "./resources/resourcesFunctions.jsx"
+import { addContemplation, removeEssence, removeContemplation } from "./player/playerFunctions.jsx"
 import { doResearch } from "./research/researchFunctions.jsx"
 import { useResearch, useResearchDispatch } from "./research/researchContext.jsx"
 import { useConstructs, useConstructsDispatch } from "./constructs/constructsContext.jsx"
 import { doConstructs } from "./constructs/constructsFunctions.jsx"
 
-export function MainPage({isActive, saveHandler, currentSave, lastUpdate, lastUpdateHandler, messageList, messageHandler}){
+export function MainPage({isActive, saveHandler, lastUpdate, lastUpdateHandler, messageList, messageHandler}){
+    /*
+    CONTEXTS
+    */
     const player = usePlayer();
     const playerDispatch = usePlayerDispatch();
     const resources = useResources();
@@ -27,17 +30,23 @@ export function MainPage({isActive, saveHandler, currentSave, lastUpdate, lastUp
     const constructs = useConstructs();
     const constructsDispatch = useConstructsDispatch();
 
+
+    /*
+    GAME SPEED
+    */
     const [gameSpeed, setGameSpeed] = useState(1);
     function changeGameSpeed(value){
         setGameSpeed(value);
     }
     const ticksPerSecond = 10;
     const loopDelay = 1000 / (ticksPerSecond * gameSpeed);
+
+
+    /*
+    GAME LOOP
+    */
     const loopRef = useRef(null);
     const realTimeLoopRef = useRef(null);
-    const saveRef = useRef(null);
-    const [saveInterval, setSaveInterval] = useState(Date.now())
-    const [saveReady, setSaveReady] = useState(false);
 
     //basic game loop
     useEffect(() => {
@@ -52,7 +61,7 @@ export function MainPage({isActive, saveHandler, currentSave, lastUpdate, lastUp
             }
             //save and reset the save timer
             if(saveReady){
-                save();
+                saveHandler();
                 setSaveReady(false);
                 setSaveInterval(Date.now());
             }
@@ -81,6 +90,14 @@ export function MainPage({isActive, saveHandler, currentSave, lastUpdate, lastUp
         }
     })
 
+
+    /*
+    SAVING
+    */
+    const saveRef = useRef(null);
+    const [saveInterval, setSaveInterval] = useState(Date.now())
+    const [saveReady, setSaveReady] = useState(false);
+
     //save interval
     useEffect(() => {
         var lastSave = saveInterval;
@@ -95,6 +112,10 @@ export function MainPage({isActive, saveHandler, currentSave, lastUpdate, lastUp
         }
     }, [saveReady]) //only run when saveReady changes
 
+
+    /*
+    INFLUENCE
+    */
     const [expanding, setExpanding] = useState(false);
     function toggleExpansion(){
         if(!expanding){ //attempt to turn on expansion
@@ -113,39 +134,6 @@ export function MainPage({isActive, saveHandler, currentSave, lastUpdate, lastUp
         }
     }
 
-    function doUpdates(){
-        consumeActiveResources();
-    
-        expandInfluence();
-    
-        updateActiveResearch();
-
-        updateActiveConstructs();
-    }
-
-    //TODO: move this function to resourcesFunctions.jsx
-    function consumeActiveResources(){
-        resources.map(resource => {
-            if(!resource.active){ //inactive resources have no change
-                return;
-            }
-            if(resource.type == "discrete"){
-                consumeDiscrete(resource.id, resources, resourcesDispatch, player, playerDispatch, messageHandler);
-            }
-            else{
-                var essenceToAdd = consumeVolume(resource.id, resources, resourcesDispatch, player, playerDispatch, messageHandler);
-                if(!addEssence(essenceToAdd, player, playerDispatch)){
-                    resourcesDispatch({
-                        type: 'deactivateResource',
-                        id: resource.id
-                    });
-                    removeAction(playerDispatch);
-                    messageHandler("Your essence is full, turned off consumption of " + resource.name, "errorMessage");
-                }
-            }
-        })
-    }    
-    
     function expandInfluence(){
         if(!expanding) return;
 
@@ -161,6 +149,20 @@ export function MainPage({isActive, saveHandler, currentSave, lastUpdate, lastUp
             toggleExpansion();
         }
     }
+
+
+    /*
+    GAME UPDATES
+    */
+    function doUpdates(){
+        consumeActiveResources(resources, resourcesDispatch, player, playerDispatch, messageHandler);
+    
+        expandInfluence();
+    
+        updateActiveResearch();
+
+        updateActiveConstructs();
+    }
     
     function updateActiveResearch(){
         doResearch(research, researchDispatch, player, playerDispatch, resources, resourcesDispatch, constructsDispatch, messageHandler);
@@ -170,43 +172,10 @@ export function MainPage({isActive, saveHandler, currentSave, lastUpdate, lastUp
         doConstructs(playerDispatch, constructs, constructsDispatch, messageHandler)
     }
 
-    function save(){
-        var newState = {
-            influence: player.influenceVolume,
-            essence: player.essence,
-            contemplation: player.contemplation,
-            lastUpdate: lastUpdate,
-            consumed: [0,0,0,0,0,0,0,0,0,0],
-            discreteProgress: [0,0,0,0,0,0,0,0,0,0],
-            researchCompleted: [],
-            researchUnlocked: [],
-            researchProgress: [],
-            constructs: []
-        };
-        resources.forEach((r) => {
-            newState.consumed[r.id] = r.consumed;
-            if(r.type === "discrete") newState.discreteProgress[r.id] = r.progress;
-        })
-        research.map((r) => {
-            if(r.complete) {
-                newState.researchCompleted.push(r.id);
-                return;
-            }
-            if(r.unlocked) {
-                newState.researchUnlocked.push(r.id);
-            }
-            if(r.essencePaid > 0){
-                newState.researchProgress.push({id: r.id, value: r.essencePaid});
-                return;
-            }
-        })
-        constructs.forEach((c) => {
-            newState.constructs.push(c);
-        })
-        saveHandler(newState);
-        messageHandler("Game Saved", "infoMessage");
-    }
-
+    
+    /*
+    COMPONENT
+    */
     return(
         <div className={isActive ? "display-flex" : "display-none"}>
             <ResourcesColumn speed = {gameSpeed} speedHandler = {changeGameSpeed} messageHandler={messageHandler}/>

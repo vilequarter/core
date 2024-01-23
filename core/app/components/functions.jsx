@@ -1,8 +1,13 @@
+/*File of basic functions*/
+
+//returns a logarithmic percentage
 export function logarithmic(current, max){
     var baseLog =  Math.log(current) / Math.log(max);
     return Math.pow(100, baseLog) / 100;
 }
 
-export function round(value){
-    return Math.round(value * 10) / 10;
+//rounds a value to provided number of decimal places
+export function round(value, places){
+    const modifier = Math.pow(10, places);
+    return Math.round(value * modifier) / modifier;
 }

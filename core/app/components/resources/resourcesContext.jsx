@@ -19,7 +19,7 @@ export function ResourcesProvider({ children }) {
             consumed: 0,
             progress: 0,
             active: false,
-            getAvailable: function(player){return round((this.ratio * player.influenceVolume) - this.consumed)}
+            getAvailable: function(player){return round((this.ratio * player.influenceVolume) - this.consumed, 1)}
         },
         {
             id: 1, 
@@ -75,7 +75,7 @@ export function ResourcesProvider({ children }) {
             consumed: 0,
             progress: 0,
             active: false,
-            getAvailable: function(player){return round((this.ratio * player.influenceVolume) - this.consumed)}
+            getAvailable: function(player){return round((this.ratio * player.influenceVolume) - this.consumed, 1)}
         },
         {
             id: 5, 
@@ -89,7 +89,7 @@ export function ResourcesProvider({ children }) {
             consumed: 0,
             progress: 0,
             active: false,
-            getAvailable: function(player){return round((this.ratio * player.influenceVolume) - this.consumed)}
+            getAvailable: function(player){return round((this.ratio * player.influenceVolume) - this.consumed, 1)}
         },
         {
             id: 6,
@@ -172,10 +172,7 @@ export function useResourcesDispatch(){
     return useContext(ResourcesDispatchContext);
 }
 
-//  action
-//      type
-//      id
-//      value?
+
 // data validation done in external functions
 function resourcesReducer(resources, action){
     if(action.type == 'updateAll'){

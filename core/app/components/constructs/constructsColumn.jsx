@@ -12,11 +12,14 @@ export function ConstructsColumn({messageHandler}){
     const resources = useResources();
 
     const toggleConstruct = (id) => {
+        //try to pay for construct
         if(!constructs[id].paid){
+            //avoid softlock
             if(softlockCheck(player, resources, constructs[id].cost)){
                 messageHandler("If you pay for this construct you might starve! Expand your influence first!", "errorMessage");
                 return;
             }
+            //pay for construct
             if(removeEssence(constructs[id].cost, player, playerDispatch)){
                 constructsDispatch({
                     id: id,
@@ -27,14 +30,16 @@ export function ConstructsColumn({messageHandler}){
                 messageHandler("Not enough essence to pay for " + constructs[id].name, "infoMessage");
             }
         }
+        //construct already paid
         if(constructs[id].paid){
+            //stop active construct
             if(constructs[id].active){
                 removeAction(playerDispatch);
                 constructsDispatch({
                     id: id,
                     type: 'stopConstruct'
                 })
-            } else if(addAction(player, playerDispatch)) {
+            } else if(addAction(player, playerDispatch)) { //start inactive construct
                 constructsDispatch({
                     id: id,
                     type: 'startConstruct'
@@ -43,6 +48,7 @@ export function ConstructsColumn({messageHandler}){
         }
     }
 
+    //returns true if the cost of the construct would leave the player with no essence and no resources
     function softlockCheck(player, resources, cost){
         const expandCost = player.getExpandCost();
         var softlockRisk = false;
@@ -60,7 +66,7 @@ export function ConstructsColumn({messageHandler}){
         return false;
     }
 
-
+    //build construct list
     let items = [];
 
     constructs.forEach((construct) =>{
@@ -78,6 +84,7 @@ export function ConstructsColumn({messageHandler}){
         }
     })
 
+    //component
     return(
         <div className="column">
             <div style={{position: "relative"}}>

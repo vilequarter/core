@@ -7,7 +7,7 @@ export const PlayerDispatchContext = createContext(null);
 
 export function PlayerProvider({ children }) {
     const initialPlayer = {
-        contemplation: 0, //offline seconds
+        contemplation: 0, //offline ticks
     
         essence: 0,
         baseMaxEssence: 100,
@@ -17,7 +17,7 @@ export function PlayerProvider({ children }) {
     
         influenceUnlocked: false,
         influenceVolume: 65.45,
-        getInfluenceRadius: function(){return round(Math.cbrt(.75 * this.influenceVolume / Math.PI))},
+        getInfluenceRadius: function(){return round(Math.cbrt(.75 * this.influenceVolume / Math.PI), 1)},
         baseExpandCost: 1, //essence per m³
         expandCostMultiplier: 1,
         expandCostBaseModifier: 0,
@@ -31,7 +31,7 @@ export function PlayerProvider({ children }) {
         activeActions: 0,
         maxActions: 1,
     
-        baseResearchRate: .1, //essence spent / research progress per tick
+        baseResearchRate: .1, //essence spent per tick
         researchRateMultiplier: 1,
         researchRateBaseModifier: 0,
         getResearchRate: function(){return (this.baseResearchRate + this.researchRateBaseModifier) * this.researchRateMultiplier},

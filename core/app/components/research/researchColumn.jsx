@@ -5,19 +5,23 @@ import { List } from "../list";
 import { addAction, removeAction, removeEssence } from "../player/playerFunctions";
 import { usePlayer, usePlayerDispatch } from "../player/playerContext";
 import { useResearch, useResearchDispatch } from "./researchContext";
-import { useResources } from "../resources/resourcesContext";
 import { round } from "../functions";
 
 export function ResearchColumn({messageHandler}){
+    //TabSwitch state
     const [activeIndex, setActiveIndex] = useState(0);
+    function toAvailable(){
+        setActiveIndex(0);
+    }
+
+    function toCompleted(){
+        setActiveIndex(1);
+    }
 
     const research = useResearch();
     const researchDispatch = useResearchDispatch();
     const player = usePlayer();
     const playerDispatch = usePlayerDispatch();
-
-    let availableItems = [];
-    let completedItems = [];
 
     const toggleResearch = (id) => {
         if(research[id].active){
@@ -30,6 +34,9 @@ export function ResearchColumn({messageHandler}){
         }
     }
 
+    //populate research lists
+    let availableItems = [];
+    let completedItems = [];
     research.forEach((r) =>{
         if(r.complete){
             completedItems.push({
@@ -44,21 +51,13 @@ export function ResearchColumn({messageHandler}){
                 title: r.name,
                 text: r.flavorText,
                 effect: r.effectDescription,
-                cost: round(r.essencePaid) + " / " + r.essenceCost + " essence",
+                cost: round(r.essencePaid, 1) + " / " + r.essenceCost + " essence",
                 handler: () => toggleResearch(r.id),
                 className: r.active ? "buttonActive" : "",
                 progress: r.essencePaid > 0 ? (100 * (r.essencePaid / r.essenceCost)) : 0
             })
         }
     })
-
-    function toAvailable(){
-        setActiveIndex(0);
-    }
-
-    function toCompleted(){
-        setActiveIndex(1);
-    }
 
     return(
         <div className="column">

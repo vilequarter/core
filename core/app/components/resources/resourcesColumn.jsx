@@ -37,8 +37,8 @@ export function ResourcesColumn({speed, speedHandler, messageHandler}){
         }
     }
 
+    //populate resource list
     let items = [];
-
     resources.forEach(resource =>{
         if(resource.unlocked){
             items.push({
@@ -57,7 +57,7 @@ export function ResourcesColumn({speed, speedHandler, messageHandler}){
         <div className="column">
             <div style={{position: "relative"}}>
                 <h3>Resources</h3>
-                <b>Essence: </b>{round(player.essence)}{player.getMaxEssence() > 100 ? " / " + player.getMaxEssence() : ""}
+                <b>Essence: </b>{round(player.essence, 1)}{player.getMaxEssence() > 100 ? " / " + player.getMaxEssence() : ""}
                 <br></br>
                 <progress value={logarithmic(player.essence, player.getMaxEssence())}></progress>
                 <br></br>

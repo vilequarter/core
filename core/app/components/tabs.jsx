@@ -1,6 +1,5 @@
 import { Button } from "./button";
 
-// (obj)tabs - object containing the title and handler of the tab buttons
 export function TabSwitch({tabs, isActive}){
     const buttons = [];
 

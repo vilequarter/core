@@ -1,5 +1,7 @@
 /* TODO
     messageContext?
+    research/resource/construct class?
+        move initial research/resources/constructs to separate files
 
     option for turning off informational messages (running out of essence/resource, research complete, etc)    
 
@@ -10,13 +12,8 @@
 
 import './styles.css'
 import Head from 'next/head';
-
-import { PlayerProvider } from './components/player/playerContext';
-import { ResourcesProvider } from './components/resources/resourcesContext';
-
 import { Game } from './game';
-import { ResearchProvider } from './components/research/researchContext';
-import { ConstructsProvider } from './components/constructs/constructsContext';
+import Providers from './components/providers';
 
 
 
@@ -26,15 +23,10 @@ export default function Home() {
             <Head>
                 <title>Core</title>
             </Head>
-            <PlayerProvider>
-                <ResourcesProvider>
-                    <ResearchProvider>
-                        <ConstructsProvider>
-                            <Game/>
-                        </ConstructsProvider>
-                    </ResearchProvider>
-                </ResourcesProvider>
-            </PlayerProvider>
+
+            <Providers>
+                <Game/>
+            </Providers>
         </>
     );
 }

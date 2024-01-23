@@ -15,6 +15,9 @@ import { useResearch, useResearchDispatch } from "./components/research/research
 import { useConstructs, useConstructsDispatch } from "./components/constructs/constructsContext";
 
 export function Game(){
+    /*
+    CONTEXTS
+    */
     const player = usePlayer();
     const playerDispatch = usePlayerDispatch();
     const resources = useResources();
@@ -24,9 +27,11 @@ export function Game(){
     const constructs = useConstructs();
     const constructsDispatch = useConstructsDispatch();
 
-    const [activeIndex, setActiveIndex] = useState(0);
-    const [lastUpdate, setLastUpdate] = useState(Date.now());
 
+    /*
+    TABS
+    */
+    const [activeIndex, setActiveIndex] = useState(0);
     function toMain(){
         setActiveIndex(0);
     }
@@ -35,6 +40,12 @@ export function Game(){
         setActiveIndex(1);
     }
 
+
+    /*
+    SAVING
+    */
+    const [lastUpdate, setLastUpdate] = useState(Date.now());
+    const SAVE = 'save';
     const defaultSaveState = {
         influence: 65.45,
         essence: 0,
@@ -47,9 +58,6 @@ export function Game(){
         constructs: [],
         lastUpdate: Date.now()
     }
-
-    const SAVE = 'save';
-
     const [currentSave, setCurrentSave] = useState(defaultSaveState);
 
     //load localStorage
@@ -72,9 +80,43 @@ export function Game(){
         updateAllConstructs(loaded, constructs, constructsDispatch);
     }
     
-    const save = (state) => {
-        setCurrentSave(state);
-        localStorage.setItem(SAVE, JSON.stringify(state));
+    const save = () => {
+        var newState = {
+            influence: player.influenceVolume,
+            essence: player.essence,
+            contemplation: player.contemplation,
+            lastUpdate: lastUpdate,
+            consumed: [0,0,0,0,0,0,0,0,0,0],
+            discreteProgress: [0,0,0,0,0,0,0,0,0,0],
+            researchCompleted: [],
+            researchUnlocked: [],
+            researchProgress: [],
+            constructs: []
+        };
+        resources.forEach((r) => {
+            newState.consumed[r.id] = r.consumed;
+            if(r.type === "discrete") newState.discreteProgress[r.id] = r.progress;
+        })
+        research.map((r) => {
+            if(r.complete) {
+                newState.researchCompleted.push(r.id);
+                return;
+            }
+            if(r.unlocked) {
+                newState.researchUnlocked.push(r.id);
+            }
+            if(r.essencePaid > 0){
+                newState.researchProgress.push({id: r.id, value: r.essencePaid});
+                return;
+            }
+        })
+        constructs.forEach((c) => {
+            const newConstruct = {...c};
+            newState.constructs.push(newConstruct);
+        })
+        addMessage("Game Saved", "infoMessage");
+        setCurrentSave(newState);
+        localStorage.setItem(SAVE, JSON.stringify(newState));
     }
 
     const deleteSave = () => {
@@ -113,6 +155,10 @@ export function Game(){
         return false;
     }
 
+    
+    /*
+    MESSAGES
+    */
     const [messageList, setMessageList] = useState([{text: "Welcome to Core", className: "loreMessage"}]);
 
     const addMessage = (text, className) => {
@@ -129,6 +175,9 @@ export function Game(){
     }
 
     
+    /*
+    COMPONENT
+    */
     return(
         <div className="game">
             <TabSwitch 

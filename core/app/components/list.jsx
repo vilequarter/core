@@ -1,13 +1,5 @@
 import { Button } from "./button";
 
-// (array(obj))items - objects to be included in the list
-//      (string?)title - title of the button
-//      (string?)text - main content of the button
-//      (string?)effect - effect description of the button
-//      (string?)cost - cost of the button
-//      (function)handler - click handler function of the button
-//      (string?)className - styling class of the button
-//      (number?)progress - value of progress fill
 export function List({items, isActive=true}){
     const buttons = [];
 

@@ -1,7 +1,30 @@
 import { removeAction } from "../player/playerFunctions";
 import { addEssence } from "../player/playerFunctions";
 
-export function consumeVolume(id, resources, resourcesDispatch, player, playerDispatch, messageHandler){
+//active resource loop
+export function consumeActiveResources(resources, resourcesDispatch, player, playerDispatch, messageHandler){
+    resources.map(resource => {
+        if(!resource.active){
+            return;
+        }
+        if(resource.type == "discrete"){
+            consumeDiscrete(resource.id, resources, resourcesDispatch, player, playerDispatch, messageHandler);
+        }
+        else{
+            var essenceToAdd = consumeVolume(resource.id, resources, resourcesDispatch, player, playerDispatch, messageHandler);
+            if(!addEssence(essenceToAdd, player, playerDispatch)){
+                resourcesDispatch({
+                    type: 'deactivateResource',
+                    id: resource.id
+                });
+                removeAction(playerDispatch);
+                messageHandler("Your essence is full, turned off consumption of " + resource.name, "errorMessage");
+            }
+        }
+    })
+}
+
+function consumeVolume(id, resources, resourcesDispatch, player, playerDispatch, messageHandler){
     var consume = resources[id].rate;
     if(resources[id].getAvailable(player) < consume){
         consume = resources[id].getAvailable(player);
@@ -21,12 +44,12 @@ export function consumeVolume(id, resources, resourcesDispatch, player, playerDi
     return(essence);
 }
 
-export function consumeDiscrete(id, resources, resourcesDispatch, player, playerDispatch, messageHandler){
+function consumeDiscrete(id, resources, resourcesDispatch, player, playerDispatch, messageHandler){
     var progress = resources[id].progress;
 
     if(progress + resources[id].rate >= 100){
         if(!addEssence(resources[id].value, player, playerDispatch)){
-            messageHandler("Consuming " + resources[id].name + " will waste some essence, increase your capacity or spend some essence", "errorMessage");
+            messageHandler("Your essence is full, consuming " + resources[id].name + " will waste essence, increase your capacity or spend some essence", "errorMessage");
         } else {
             progress = 0;
             resourcesDispatch({
@@ -50,6 +73,7 @@ export function consumeDiscrete(id, resources, resourcesDispatch, player, player
     })
 }
 
+//called on game load to update resources
 export function updateAllResources(loaded, resources, resourcesDispatch){
     const nextResources = resources.map(resource => {
         return {

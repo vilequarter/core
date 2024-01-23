@@ -8,9 +8,7 @@ export function InfluenceColumn({expanding, expandingHandler}){
     return(
         <div className="column">
             <h3>Influence</h3>
-            <b>Influence radius: </b>{round(player.getInfluenceRadius())} m
-            <br></br>
-            <b>Influence volume: </b>{round(player.influenceVolume)} m³
+            <b>Influence volume: </b>{round(player.influenceVolume, 1)} m³
             <br></br>
 
             <Button

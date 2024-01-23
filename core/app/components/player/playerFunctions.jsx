@@ -1,6 +1,6 @@
+//attempts to add essence to storage, returns false if storage is full, adjusts value if it is more than available storage
 export function addEssence(value, player, dispatch){
     if(player.essence == player.getMaxEssence()){
-        //TODO: throw warning message
         return false;
     }
 
@@ -17,6 +17,7 @@ export function addEssence(value, player, dispatch){
     return true;
 }
 
+//attempts to remove essence (to pay for something, etc), returns false if the amount of essence available is less than the cost
 export function removeEssence(value, player, dispatch){
     if(player.essence < value){
         return false;
@@ -29,9 +30,9 @@ export function removeEssence(value, player, dispatch){
     return true;
 }
 
+//attempts to add an active action, returns false if there are no available actions
 export function addAction(player, dispatch){
     if(player.activeActions == player.maxActions){
-        //TODO: throw warning message
         return false;
     }
 
@@ -54,6 +55,8 @@ export function addContemplation(value, dispatch){
     });
 }
 
+//attempts to remove contemplation (to pay for increased game speed), returns false if there is no contemplation,
+//adjusts value if the cost is more than the available contemplation
 export function removeContemplation(value, player, dispatch){
     if(player.contemplation == 0){
         return false;
@@ -66,6 +69,7 @@ export function removeContemplation(value, player, dispatch){
     return true;
 }
 
+//called on game load to update player object with loaded values
 export function updateAllPlayer(loaded, dispatch){
     dispatch({
         type: 'updateAll',
