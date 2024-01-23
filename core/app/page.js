@@ -1,7 +1,7 @@
 /* TODO
     messageContext?
-    research/resource/construct class?
-        move initial research/resources/constructs to separate files
+
+    number library (number, breakinfinity, breaketernity, etc)
 
     option for turning off informational messages (running out of essence/resource, research complete, etc)    
 
