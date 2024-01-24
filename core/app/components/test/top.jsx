@@ -1,26 +1,18 @@
-import {useState, useEffect} from 'react';
-import { Child } from './child';
-
 export function Top() {
-    const defaultSaveState = 0;
-
-    const [currentSave, setCurrentSave] = useState(defaultSaveState);
-
-    useEffect(() => {
-        if(localStorage.getItem('save') == null) return;
-        setCurrentSave(JSON.parse(localStorage.getItem('save')));
-    },[])
-
-    const clickHandler = () => {
-        const newSave = currentSave + 1;
-        localStorage.setItem('save', newSave);
-        setCurrentSave(newSave);
+    class Test {
+        constructor(name, text, foo){
+            this.name = name;
+            this.text = text;
+            this.foo = foo;
+        }
     }
 
+    const test1 = new Test("Test 1", "I am a test", () => {console.log(this.name)})
+    const test2 = new Test("Test 2", "I am also a test", () => {console.log(this.text)})
     return(
-        <Child
-            currentSave={currentSave}
-            handler={clickHandler}
-        />
+        <>
+            <button onClick={test1.foo}>{test1.name}</button>
+            <button onClick={test2.foo}>{test2.name}</button>
+        </>
     )
 }

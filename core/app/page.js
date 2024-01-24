@@ -14,10 +14,17 @@ import './styles.css'
 import Head from 'next/head';
 import { Game } from './game';
 import Providers from './components/providers';
+import { Top } from './components/test/top';
 
 
 
 export default function Home() {
+    /*
+    return(
+        <Top></Top>
+    )
+    */
+    
     return (
         <>
             <Head>
@@ -29,4 +36,5 @@ export default function Home() {
             </Providers>
         </>
     );
-}
+    
+    }
