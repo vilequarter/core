@@ -3,7 +3,10 @@
 
     number library (number, breakinfinity, breaketernity, etc)
 
-    option for turning off informational messages (running out of essence/resource, research complete, etc)    
+    option for turning off informational messages (running out of essence/resource, research complete, etc)
+    
+    period between unlocking essence cores and unlocking dirt eaters is slow and tedious, add more research
+        probably along the lines of dirt consumption and influence expansion rates
 
     BUGS
         a rare bug where actions are getting removed twice

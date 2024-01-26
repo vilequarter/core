@@ -211,7 +211,7 @@ export const initialResearch = [
         //name
         "Too Full",
         //cost
-        100,
+        95,
         //flavorText
         "Try as you might, you can't fit any more essence in your core. Maybe there's a way to store it elsewhere?",
         //effectDescription
@@ -257,7 +257,7 @@ export const initialResearch = [
         //name
         "Expanded Mind",
         //cost
-        150,
+        50,
         //flavorText
         "It's hard to judge distance as a rock, but you think you're now able to reach 5 meters out in every direction now! You feel motivated by this milestone!",
         //effectDescription

@@ -7,23 +7,22 @@ Theme inspired by the "Divine Dungeon" book series by Dakota Krout.
 Mechanics inspired by a host of other incremental games.
 
 Current functionality:
-* Eat Dirt!
-* Gain Essence!
+* Consume Resources for Essence!
+  * Eat lots of Dirt!
+  * Crunch some Pebbles! (probably not balanced right now)
 * Expand Influence!
 * Speed up time with Contemplation!
   * Contemplation gained while game not in focus or offline
-  * Offline progress is not currently implemented, and is a low priority in favor of Contemplation
-* Ability to do only one thing at a time!
-  * This is intentional and will change with research
 * Research!
-  * Up to unlocking Constructs
 * Constructs!
-  * Just one right now: Essence Core
+  * Essence storage & auto-dirt-consumption!
 * Saving!
   * Currently 10-minute auto-save
-  * Settings tab includes a manual save button, as well as text-formatted export/import and a hard reset button
+  * Settings tab includes a manual save button, text-formatted export/import buttons, and a hard reset button
 * Informational Messages!
-* About 10 minutes of content!
+* Bugs, probably!
+* About 1-2 hours of content!
+  * Endgame: Research "Essence Spiral"
 
 Upcoming functionality (roughly in order of priority):
 * More Research!
@@ -34,3 +33,4 @@ Upcoming functionality (roughly in order of priority):
 * Less-ugly layout!
 * Themes!
 * Additional Elements!
+* Less Bugs!
