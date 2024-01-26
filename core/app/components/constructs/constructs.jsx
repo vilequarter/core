@@ -18,11 +18,6 @@ class Construct{
     }
 }
 
-/* CONSTRUCT FUNCTIONS
-    influence trickle
-    dirt trickle
-*/
-
 class EssenceCore extends Construct{
     constructor(){
         super(
@@ -42,17 +37,45 @@ class EssenceCore extends Construct{
             1
         )
     }
-    effect = (playerDispatch) => {
-        playerDispatch({
-            type: 'adjustMaxEssenceBase',
-            value: this.effectValue
-        })
-    }
 
     effectDescription = () => {
         return "Increases essence storage by " + this.effectValue;
     }
 }
+
+class DirtEater extends Construct{
+    constructor(){
+        super(
+        //id
+        1,
+        //name
+        "Dirt Eater",
+        //description
+        "Slowly but automatically consumes Dirt, turning it into usable Essence",
+        //baseCost
+        10,
+        //costGrowth
+        2,
+        //effectValue
+        .01,
+        //buildRate
+        .1
+        )
+    }
+    effectDescription = () => {
+        return ("Consumes " + 10 * this.effectValue + "m³ of Dirt per second")
+    }
+}
+
+export const initialConstructs = [
+    new EssenceCore(),
+    new DirtEater(),
+]
+
+/* CONSTRUCT FUNCTIONS
+    influence trickle
+    dirt trickle
+*/
 
 /*
     new Construct(
@@ -72,21 +95,3 @@ class EssenceCore extends Construct{
         
     ),
 */
-export const initialConstructs = [
-    new EssenceCore(
-        //id
-        0,
-        //name
-        "Essence Core",
-        //description
-        "An external, artificial essence storage core",
-        //baseCost
-        100,
-        //costGrowth
-        2,
-        //effectValue
-        100,
-        //buildRate
-        1
-    ),
-]

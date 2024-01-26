@@ -15,8 +15,8 @@ export function InfluenceColumn({expanding, expandingHandler}){
                 content = {<>
                     <div className="buttonTitle">Expand Influence</div>
                     <div className="buttonFlavorText">Embrace your surroundings</div>
-                    <div className="buttonText">Expand at {10 * player.getExpandRate()} m³ per second</div>
-                    <span className="buttonCost">Costs {player.getExpandCostPerSecond()} essence per second</span>
+                    <div className="buttonText">Expand at {round(10 * player.getExpandRate(), 1)} m³ per second</div>
+                    <span className="buttonCost">Costs {round(player.getExpandCostPerSecond(), 1)} essence per second</span>
                 </>}
                 handler = {() => expandingHandler()}
                 className = {expanding ? "buttonActive" : ""}

@@ -13,7 +13,7 @@ export function PlayerProvider({ children }) {
         baseMaxEssence: 100,
         maxEssenceMultiplier: 1,
         maxEssenceBaseModifier: 0,
-        getMaxEssence: function(){return (this.baseMaxEssence + this.maxEssenceBaseModifier) * this.maxEssenceMultiplier},
+        getMaxEssence: function(constructs){return ((this.baseMaxEssence * this.maxEssenceMultiplier) + (constructs[0].owned * constructs[0].effectValue))},
     
         influenceUnlocked: false,
         influenceVolume: 65.45,

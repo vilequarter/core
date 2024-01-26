@@ -1,54 +1,74 @@
 import { removeAction } from "../player/playerFunctions";
 import { addEssence } from "../player/playerFunctions";
 
+
 //active resource loop
-export function consumeActiveResources(resources, resourcesDispatch, player, playerDispatch, messageHandler){
+export function consumeActiveResources(resources, resourcesDispatch, player, playerDispatch, constructs, messageHandler, expanding){
     resources.map(resource => {
-        if(!resource.active){
-            return;
-        }
-        if(resource.type == "discrete"){
-            consumeDiscrete(resource.id, resources, resourcesDispatch, player, playerDispatch, messageHandler);
-        }
-        else{
-            var essenceToAdd = consumeVolume(resource.id, resources, resourcesDispatch, player, playerDispatch, messageHandler);
-            if(!addEssence(essenceToAdd, player, playerDispatch)){
-                resourcesDispatch({
-                    type: 'deactivateResource',
-                    id: resource.id
-                });
-                removeAction(playerDispatch);
-                messageHandler("Your essence is full, turned off consumption of " + resource.name, "errorMessage");
+        var toConsume = 0;
+        var available = resource.getAvailable(player);
+        if(resource.active){
+            if(resource.type == "discrete"){
+                consumeDiscrete(resource.id, resources, resourcesDispatch, player, playerDispatch, constructs, messageHandler);
+                return;
+            }
+            else{
+                //essence is full, turn off active resources
+                if((player.essence == player.getMaxEssence(constructs)) || nearFullCheck(player, resource, constructs, expanding)){
+                    resourcesDispatch({
+                        type: 'deactivateResource',
+                        id: resource.id
+                    });
+                    removeAction(playerDispatch);
+                    messageHandler("Your essence is full, turned off consumption of " + resource.name, "errorMessage");
+                    return;
+                } else {
+                    if(available < resource.rate){
+                        toConsume = available;
+                        resourcesDispatch({
+                            type: 'deactivateResource',
+                            id: resource.id
+                        });
+                        messageHandler("You've run out of " + resource.name, "infoMessage")
+                        removeAction(playerDispatch);
+                    } else {
+                        toConsume = resource.rate;
+                    }
+                }
             }
         }
+        //handle auto-consume
+        if(resource.autoConstructId > -1){
+            if(player.essence == player.getMaxEssence(constructs)) return;
+            var toAutoConsume = constructs[resource.autoConstructId].owned * constructs[resource.autoConstructId].effectValue;
+            if((available - toConsume) < toAutoConsume){
+                toAutoConsume = (available - toConsume);
+            }
+            toConsume += toAutoConsume;
+        }
+        resourcesDispatch({
+            type: 'consumeResource',
+            id: resource.id,
+            value: toConsume
+        })
+        var essenceToAdd = toConsume * resource.value;
+        addEssence(essenceToAdd, player, playerDispatch, constructs);
     })
 }
 
-function consumeVolume(id, resources, resourcesDispatch, player, playerDispatch, messageHandler){
-    var consume = resources[id].rate;
-    if(resources[id].getAvailable(player) < consume){
-        consume = resources[id].getAvailable(player);
-        resourcesDispatch({
-            type: 'deactivateResource',
-            id: id
-        });
-        messageHandler("You've run out of " + resources[id].name, "infoMessage")
-        removeAction(playerDispatch);
+function nearFullCheck(player, resource, constructs, expanding){
+    if(expanding && player.essence + (resource.rate * resource.value) >= player.getMaxEssence(constructs)){
+        return true;
     }
-    var essence = resources[id].value * consume;
-    resourcesDispatch({
-        type: 'consumeResource',
-        id: id,
-        value: consume
-    });
-    return(essence);
+    return false;
 }
 
-function consumeDiscrete(id, resources, resourcesDispatch, player, playerDispatch, messageHandler){
+
+function consumeDiscrete(id, resources, resourcesDispatch, player, playerDispatch, constructs, messageHandler){
     var progress = resources[id].progress;
 
     if(progress + resources[id].rate >= 100){
-        if(!addEssence(resources[id].value, player, playerDispatch)){
+        if(!addEssence(resources[id].value, player, playerDispatch, constructs)){
             messageHandler("Your essence is full, consuming " + resources[id].name + " will waste essence, increase your capacity or spend some essence", "errorMessage");
         } else {
             progress = 0;

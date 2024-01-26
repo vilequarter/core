@@ -19,21 +19,24 @@ export function ResourcesProvider({ children }) {
             consumed: 0,
             progress: 0,
             active: false,
-            getAvailable: function(player){return round((this.ratio * player.influenceVolume) - this.consumed, 1)}
+            getAvailable: function(player){return round((this.ratio * player.influenceVolume) - this.consumed, 1)},
+            autoConstructId: 1
         },
+        //TODO: adjust values to make pebbles worth interacting with
         {
             id: 1, 
             name: "Pebbles",
             type: "discrete",
             flavorText: "Look up \"Luna Crunching\". That's you now",
-            ratio: 10000,
-            value: .01,
-            rate: (10/5),
+            ratio: 10,
+            value: 50,
+            rate: 10, //percent per tick
             unlocked: false,
             consumed: 0,
             progress: 0,
             active: false,
-            getAvailable: function(player){return Math.floor((this.ratio * player.influenceVolume) - this.consumed)}
+            getAvailable: function(player){return Math.floor((this.ratio * player.influenceVolume) - this.consumed)},
+            autoConstructId: -1
         },
         {
             id: 2, 
@@ -47,7 +50,8 @@ export function ResourcesProvider({ children }) {
             consumed: 0,
             progress: 0,
             active: false,
-            getAvailable: function(player){return Math.floor((this.ratio * player.influenceVolume) - this.consumed)}
+            getAvailable: function(player){return Math.floor((this.ratio * player.influenceVolume) - this.consumed)},
+            autoConstructId: -1
         },
         {
             id: 3, 
@@ -61,7 +65,8 @@ export function ResourcesProvider({ children }) {
             consumed: 0,
             progress: 0,
             active: false,
-            getAvailable: function(player){return Math.floor((this.ratio * player.influenceVolume) - this.consumed)}
+            getAvailable: function(player){return Math.floor((this.ratio * player.influenceVolume) - this.consumed)},
+            autoConstructId: -1
         },
         {
             id: 4, 
@@ -75,7 +80,8 @@ export function ResourcesProvider({ children }) {
             consumed: 0,
             progress: 0,
             active: false,
-            getAvailable: function(player){return round((this.ratio * player.influenceVolume) - this.consumed, 1)}
+            getAvailable: function(player){return round((this.ratio * player.influenceVolume) - this.consumed, 1)},
+            autoConstructId: -1
         },
         {
             id: 5, 
@@ -89,7 +95,8 @@ export function ResourcesProvider({ children }) {
             consumed: 0,
             progress: 0,
             active: false,
-            getAvailable: function(player){return round((this.ratio * player.influenceVolume) - this.consumed, 1)}
+            getAvailable: function(player){return round((this.ratio * player.influenceVolume) - this.consumed, 1)},
+            autoConstructId: -1
         },
         {
             id: 6,
@@ -103,7 +110,8 @@ export function ResourcesProvider({ children }) {
             consumed: 0,
             progress: 0,
             active: false,
-            getAvailable: function(player){return Math.floor((this.ratio * player.influenceVolume) - this.consumed)}
+            getAvailable: function(player){return Math.floor((this.ratio * player.influenceVolume) - this.consumed)},
+            autoConstructId: -1
         },
         {
             id: 7, 
@@ -117,7 +125,8 @@ export function ResourcesProvider({ children }) {
             consumed: 0,
             progress: 0,
             active: false,
-            getAvailable: function(player){return Math.floor((this.ratio * player.influenceVolume) - this.consumed)}
+            getAvailable: function(player){return Math.floor((this.ratio * player.influenceVolume) - this.consumed)},
+            autoConstructId: -1
         },
         {
             id: 8, 
@@ -131,7 +140,8 @@ export function ResourcesProvider({ children }) {
             consumed: 0,
             progress: 0,
             active: false,
-            getAvailable: function(player){return Math.floor((this.ratio * player.influenceVolume) - this.consumed)}
+            getAvailable: function(player){return Math.floor((this.ratio * player.influenceVolume) - this.consumed)},
+            autoConstructId: -1
         },
         {
             id: 9, 
@@ -145,7 +155,8 @@ export function ResourcesProvider({ children }) {
             consumed: 0,
             progress: 0,
             active: false,
-            getAvailable: function(player){return Math.floor((this.ratio * player.influenceVolume) - this.consumed)}
+            getAvailable: function(player){return Math.floor((this.ratio * player.influenceVolume) - this.consumed)},
+            autoConstructId: -1
         }
     ]
 

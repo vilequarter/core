@@ -3,6 +3,7 @@ import { usePlayer, usePlayerDispatch } from "../player/playerContext";
 import { addAction, removeAction, removeEssence } from "../player/playerFunctions";
 import { useResources } from "../resources/resourcesContext";
 import { useConstructs, useConstructsDispatch } from "./constructsContext";
+import { round } from "../functions";
 
 export function ConstructsColumn({messageHandler}){
     const constructs = useConstructs();
@@ -76,7 +77,7 @@ export function ConstructsColumn({messageHandler}){
                 text: construct.description,
                 effect: construct.effectDescription(),
                 cost: "Cost: " + construct.cost + " essence",
-                flavorText: "Build progress: " + (construct.paid ? (construct.progress + " / 100") : "Not Bought"),
+                flavorText: "Build progress: " + (construct.paid ? (round(construct.progress, 1) + " / 100") : "Not Bought"),
                 handler: () => toggleConstruct(construct.id),
                 progress: construct.progress,
                 className: construct.active ? "buttonActive" : ""

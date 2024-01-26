@@ -1,13 +1,13 @@
 //attempts to add essence to storage, returns false if storage is full, adjusts value if it is more than available storage
-export function addEssence(value, player, dispatch){
-    if(player.essence == player.getMaxEssence()){
+export function addEssence(value, player, dispatch, constructs){
+    if(player.essence == player.getMaxEssence(constructs)){
         return false;
     }
 
     let actualValue = (
-        player.essence + value < player.getMaxEssence() ? 
+        player.essence + value < player.getMaxEssence(constructs) ? 
             value : 
-            (player.getMaxEssence() - player.essence)
+            (player.getMaxEssence(constructs) - player.essence)
     );
 
     dispatch({

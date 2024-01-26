@@ -6,12 +6,14 @@ import { useResources, useResourcesDispatch } from "./resourcesContext";
 import { Button } from "../button";
 
 import { addAction, removeAction } from "../player/playerFunctions";
+import { useConstructs } from "../constructs/constructsContext";
 
 export function ResourcesColumn({speed, speedHandler, messageHandler}){
     const player = usePlayer();
     const playerDispatch = usePlayerDispatch();
     const resources = useResources();
     const resourcesDispatch = useResourcesDispatch();
+    const constructs = useConstructs();
 
     function toggleResource(id){
         if(!resources[id].active){
@@ -57,9 +59,9 @@ export function ResourcesColumn({speed, speedHandler, messageHandler}){
         <div className="column">
             <div style={{position: "relative"}}>
                 <h3>Resources</h3>
-                <b>Essence: </b>{round(player.essence, 1)}{player.getMaxEssence() > 100 ? " / " + player.getMaxEssence() : ""}
+                <b>Essence: </b>{round(player.essence, 1)}{player.getMaxEssence(constructs) > 100 ? " / " + player.getMaxEssence(constructs) : ""}
                 <br></br>
-                <progress value={logarithmic(player.essence, player.getMaxEssence())}></progress>
+                <progress value={logarithmic(player.essence, player.getMaxEssence(constructs))}></progress>
                 <br></br>
                 <b>Actions: </b>{player.activeActions} / {player.maxActions}<br></br>
                 <b>Contemplation: </b>{player.contemplation}<br></br>

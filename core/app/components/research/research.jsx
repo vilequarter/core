@@ -127,8 +127,8 @@ export const initialResearch = [
         //effect
         (action) => {
             action.playerDispatch({
-                type: 'adjustResearchRateMultiplier',
-                value: 1
+                type: 'adjustResearchRateBase',
+                value: .1
         })},
         //unlock
         (player, resources, research) => {
@@ -165,7 +165,7 @@ export const initialResearch = [
         //name
         "Dirt's Nice and All...",
         //cost
-        500,
+        200,
         //flavorText
         "You've had to eat around these tiny hard things for a while, but now you feel like you should be able to break them down too.",
         //effectDescription
@@ -274,4 +274,153 @@ export const initialResearch = [
             return(player.getInfluenceRadius() >= 5)
         }
     ),
+    new Research(
+        //id
+        10,
+        //name
+        "Multitasking",
+        //cost
+        500,
+        //flavorText
+        "Something in your research suggested it was easier to split your attention as a Core. You have no details, so you'll probably be brute-forcing it, but you think you might be able to pull it off.",
+        //effectDescription
+        "Increase maximum simultaneous actions by 1",
+        //effect
+        (action) => {
+            action.playerDispatch({
+                type: 'addMaxAction'
+            })
+        },
+        //unlock
+        (player, resources, research) => {
+            return (player.influenceVolume >= 2000);
+        }
+    ),
+    new Research(
+        //id
+        11,
+        //name
+        "Experimental Technique",
+        //cost
+        500,
+        //flavorText
+        "Building Essence Cores is ineffecient, and again, you've quickly run out of room to store Essence. There's got to be a way to compress it somehow...",
+        //effectDescription
+        "Base research rate +1/second",
+        //effect
+        (action) => {
+            action.playerDispatch({
+                type: 'adjustResearchRateBase',
+                value: .1
+            })
+        },
+        //unlock
+        (player, resources, research) => {
+            return(player.essence >= 300);
+        }
+    ),
+    new Research(
+        //id
+        12,
+        //name
+        "Incompressible",
+        //cost
+        500,
+        //flavorText
+        "Nope, Essence can't just be squeezed harder to make it take up less space. In frustration you start \"throwing\" the Essence against the walls of your Core",
+        //effectDescription
+        "Base expand rate +1/second",
+        //effect
+        (action) => {
+            action.playerDispatch({
+                type: 'adjustExpandRateBase',
+                value: .1
+            })
+        },
+        //unlock
+        (player, resources, research) => {
+            return(research[11].complete);
+        }
+    ),
+    new Research(
+        //id
+        13,
+        //name
+        "Essence Spiral",
+        //cost
+        1000,
+        //flavorText
+        "Interesting! When thrown around in just the right way, it seems like the Essence starts to spiral in on itself, reducing the amount of space it occupies. Making this spiral self-sustaining is going to take some doing, though",
+        //effectDescription
+        "Main Core Max Essence x2 (does not affect Essence Cores)",
+        //effect
+        (action) => {
+            action.playerDispatch({
+                type: 'adjustMaxEssenceMultiplier',
+                value: 1
+            })
+        },
+        //unlock
+        (player, resources, research) => {
+            return(research[12].complete);
+        }
+    ),
+    new Research(
+        //id
+        14,
+        //name
+        "Auto-Munch",
+        //cost
+        300,
+        //flavorText
+        "Having to focus on eating dirt is getting a little tedious. You've had the idea to modify your Essence Core design, turning one into an Essence factory instead, though it's not very fast right now",
+        //effectDescription
+        "Unlock Dirt Eaters",
+        //effect
+        (action) => {
+            action.constructsDispatch({
+                id: 1,
+                type: 'unlockConstruct'
+            })
+        },
+        //unlock
+        (player, resources, research) => {
+            return(resources[0].consumed >= 750);
+        }
+    ),
 ]
+
+/* UNLOCK BREAKPOINTS
+
+*/
+
+/* EFFECTS
+    dirt value?
+    pebbles speed
+    expand influence speed (every 1000?)
+    dirt eater speed
+    essence core spiral
+*/
+
+/*
+    new Research(
+        //id
+        ,
+        //name
+        "",
+        //cost
+        ,
+        //flavorText
+        "",
+        //effectDescription
+        "",
+        //effect
+        (action) => {
+
+        },
+        //unlock
+        (player, resources, research) => {
+            return();
+        }
+    ),
+*/

@@ -155,7 +155,7 @@ export function MainPage({isActive, saveHandler, lastUpdate, lastUpdateHandler, 
     GAME UPDATES
     */
     function doUpdates(){
-        consumeActiveResources(resources, resourcesDispatch, player, playerDispatch, messageHandler);
+        consumeActiveResources(resources, resourcesDispatch, player, playerDispatch, constructs, messageHandler, expanding);
     
         expandInfluence();
     

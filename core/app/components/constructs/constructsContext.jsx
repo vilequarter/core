@@ -68,7 +68,6 @@ function constructsReducer(constructs, action){
                 }
             }
             case 'finishConstruct':{
-                construct.effect(action.playerDispatch);
                 return {
                     ...construct,
                     owned: construct.owned + 1,

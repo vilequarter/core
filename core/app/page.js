@@ -5,7 +5,8 @@
 
     option for turning off informational messages (running out of essence/resource, research complete, etc)    
 
-    a rare bug where actions are getting removed twice
+    BUGS
+        a rare bug where actions are getting removed twice
 */
 
 "use client";
